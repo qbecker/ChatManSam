@@ -1,0 +1,68 @@
+<project name = "Chat Man Sam" default = "dist" basedir = ".">
+    <description>
+    simple chat client/server
+  </description>
+  
+  <property name ="src" location = "src/"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  <property name="lib" value="./lib" />
+  
+ <path id="compile.classpath">
+    <pathelement location="${build}"/>
+    <pathelement path="${lib}/json.jar"/>
+    <pathelement path="${lib}/jsonrpcclient.jar"/>
+    <pathelement path="${lib}/jsonrpcproxy.jar"/>
+    <pathelement path="${lib}/jsonrpcserver.jar"/>
+   </path>
+
+  <target name="init" depends="clean">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}"
+             includeantruntime="false"
+             destdir="${build}">
+         <classpath refid="compile.classpath"/>
+      </javac>
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generate the distribution">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean"
+        description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+  
+  <target name="execute.client" depends = "compile"
+        description="executes the client">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+     <java classname="client.Driver" fork="yes">
+           <classpath refid="compile.classpath"/>
+         </java>
+  </target>
+  
+  <target name="execute.server" depends = "compile"
+        description="executes the server">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+     <java classname="server.Driver" fork="yes">
+           <classpath refid="compile.classpath"/>
+         </java>
+  </target>
+  
+</project>
