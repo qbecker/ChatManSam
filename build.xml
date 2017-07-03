@@ -11,9 +11,6 @@
  <path id="compile.classpath">
     <pathelement location="${build}"/>
     <pathelement path="${lib}/json.jar"/>
-    <pathelement path="${lib}/jsonrpcclient.jar"/>
-    <pathelement path="${lib}/jsonrpcproxy.jar"/>
-    <pathelement path="${lib}/jsonrpcserver.jar"/>
    </path>
 
   <target name="init" depends="clean">

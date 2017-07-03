@@ -10,6 +10,9 @@ class Driver
       {
  
    		 System.out.println(" Server started  " );
+   		 
+   		 Server server = new Server(8080);
+   		 /*
          ServerSocket mysocket = new ServerSocket(8080);
  
          while(true)
@@ -27,7 +30,11 @@ class Driver
  
             System.out.println(data1);
             connectionSocket.close();
+            
+   		 
          }
+         */
       }
+      
 }
     
