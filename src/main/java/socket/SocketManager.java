@@ -46,6 +46,7 @@ public abstract class SocketManager implements Runnable {
 		
 	}
 	
+	
 	public void sendMessage(Message message) {
 		outputWriter.println(message.toJsonString());
 		outputWriter.flush();

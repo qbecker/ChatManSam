@@ -10,6 +10,7 @@ public class Driver {
 	    //init client
 	    Client client = Client.clientInit("localhost", 8080, "qball");
 	    //send a test message
+	    client.login();
 	    client.sendMessage(new Message("msg", "poop"));
 	    
 	    /*
