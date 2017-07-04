@@ -17,11 +17,13 @@ public class Message{
 	public Message(String type, String message, String[] recipients) {
 		this.type = type;
 		this.message = message;
+		this.recipients = recipients;
 	}
 
 	public Message(String json) {
 		try {
 			JSONObject jsnObj = new JSONObject(json);
+			
 			this.type = jsnObj.getString("Type");
 			this.message =  jsnObj.getString("Message");
 			if(this.type.equals("ChatMessage")) {
@@ -78,6 +80,10 @@ public class Message{
 			JSONObject jsnObj = new JSONObject();
 			jsnObj.put("Type", this.getType());
 			jsnObj.put("Message", this.getMessage());
+			if(this.getType().equals("ChatMessage")) {
+				
+				jsnObj.put("Recipients", this.recipients);
+			}
 			jsn = jsnObj.toString();
 			
 		}catch(Exception e) {

@@ -40,8 +40,8 @@ public abstract class SocketManager implements Runnable {
 			}
 		}catch(Exception e) {
 			//todo: fail gracefully and clean up resources
-			System.out.println("");
 			System.out.println("Disconnected");
+			System.out.println(e);
 		}
 		
 	}
