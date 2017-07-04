@@ -1,10 +1,13 @@
 package messaging;
 
 import org.json.JSONObject;
+
+import java.io.Serializable;
+
 import org.json.JSONArray;
 
 
-public class Message{
+public class Message implements Serializable{
 	String type;
 	String message;
 	String[] recipients;
