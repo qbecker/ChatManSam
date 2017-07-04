@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import messaging.Message;
 import socket.SocketManager;
+import messaging.Message.Type;
 
 public class Server implements Runnable{
 	private int port;
@@ -83,25 +84,27 @@ public class Server implements Runnable{
 		public void readMessage(Message message) {
 			// all incoming messages from connected clients come through here
 			// Here is where we can redirect messages to other client.
-			System.out.println(message.toJsonString());
-			if(message.getType().equals("Login")) {
+			System.out.println(message.messageToString());
+			if(message.getType()== Type.Login) {
 				this.setUserName(message.getMessage());
 				putClientConn(this);
 				System.out.println(this.getUserName());
 			}
-			if(message.getType().equals("ChatMessage")) {
+			if(message.getType() == Type.ChatMessage) {
 				String[] recips = message.getRecipients();
 				for(int i = 0; i < recips.length; i++) {
 					ClientConnection con = null;
 					con = getClientConn(recips[i]);
 					if(con != null) {
-						con.sendMessage(new Message("ChatMessage", message.getMessage(), new String[] {}));
+						con.sendMessage(new Message(Type.ChatMessage, message.getMessage(), new String[] {this.userName}));
 						System.out.println("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
 					}
 				}
-				
 			}
-			//sendMessage(message);
+		}
+
+		@Override
+		public void disconnect() {
 		}
 
 	}

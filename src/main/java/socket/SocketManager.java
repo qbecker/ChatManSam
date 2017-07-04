@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import messaging.Message;
-
 /*
  *	A class to manage sockets 
  * 
@@ -44,6 +43,8 @@ public abstract class SocketManager implements Runnable {
 			//todo: fail gracefully and clean up resources
 			System.out.println("Disconnected");
 			System.out.println(e);
+			closeConnection();
+			System.out.println("socket closed");
 		}
 		
 	}
@@ -54,13 +55,20 @@ public abstract class SocketManager implements Runnable {
 			outputWriter.writeObject(message);
 			outputWriter.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	
+	public void closeConnection() {
+		try {inputRead.close();}catch(Exception e) {System.out.println(e);}
+		try {outputWriter.close();}catch(Exception e) {System.out.println(e);}
+		try {socket.close();}catch(Exception e) {System.out.println(e);}
+
+	}
+	
 	
 	public abstract void readMessage(Message message);
+	public abstract void disconnect();
 	
 }

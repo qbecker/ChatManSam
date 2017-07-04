@@ -1,5 +1,6 @@
 package client;
 import messaging.Message;
+import messaging.Message.Type;
 
 import java.util.Scanner;
 public class Driver {
@@ -43,7 +44,7 @@ public class Driver {
 	    	while(sc.hasNextLine()) {
 	    	  inputLine = sc.nextLine();
 	    	  System.out.println(inputLine);
-	    	  client.sendMessage(new Message("ChatMessage", inputLine, new String[] {target}));
+	    	  client.sendMessage(new Message(Type.ChatMessage, inputLine, new String[] {target}));
 	    	  System.out.println("Enter something");
 	    	}
 	    	sc.close();

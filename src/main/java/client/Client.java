@@ -3,6 +3,7 @@ package client;
 import java.net.Socket;
 
 import messaging.Message;
+import messaging.Message.Type;
 import socket.SocketManager;
 public class Client extends SocketManager{
 
@@ -33,14 +34,18 @@ public class Client extends SocketManager{
 	}
 	
 	public void login() {
-		sendMessage(new Message("Login", userName));
+		sendMessage(new Message(Type.Login, userName));
 	}
 
 	//over writen method from socketManager for behavior on incoming messages
 	@Override
 	public void readMessage(Message message) {
 			System.out.println("Received Message: ");
-			System.out.println(message.toJsonString());
+			System.out.println(message.messageToString());
+	}
+	@Override
+	public void disconnect() {
+		
 	}
 	
 }

@@ -3,56 +3,37 @@ package messaging;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import org.json.JSONArray;
 
 
+
 public class Message implements Serializable{
-	String type;
+	Type type;
 	String message;
 	String[] recipients;
 	
 
-	public Message(String type, String message) {
+	public Message(Type type, String message) {
 		this.type = type;
 		this.message = message;
 	}
-	public Message(String type, String message, String[] recipients) {
+	public Message(Type type, String message, String[] recipients) {
 		this.type = type;
 		this.message = message;
 		this.recipients = recipients;
 	}
 
-	public Message(String json) {
-		try {
-			JSONObject jsnObj = new JSONObject(json);
-			
-			this.type = jsnObj.getString("Type");
-			this.message =  jsnObj.getString("Message");
-			if(this.type.equals("ChatMessage")) {
-				JSONArray  tmp = jsnObj.getJSONArray("Recipients");
-				this.recipients = new String[tmp.length()];
-				for(int i = 0; i < tmp.length(); i++) {
-					this.recipients[i] = tmp.getString(i);
-				}
-			}
-
-		}catch(Exception e) {
-			this.type = "Error";
-			this.message = "Error";
-		}
-		
-		
-	}
 
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
 
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 
@@ -67,8 +48,6 @@ public class Message implements Serializable{
 		this.message = message;
 	}
 	
-	
-	
 	public String[] getRecipients() {
 		return recipients;
 	}
@@ -77,21 +56,22 @@ public class Message implements Serializable{
 		this.recipients = recipients;
 	}
 
-	public String toJsonString() {
-		String jsn = null;
+	public String messageToString() {
+		StringBuilder sb = new StringBuilder();
 		try{
-			JSONObject jsnObj = new JSONObject();
-			jsnObj.put("Type", this.getType());
-			jsnObj.put("Message", this.getMessage());
-			if(this.getType().equals("ChatMessage")) {
-				
-				jsnObj.put("Recipients", this.recipients);
+			sb.append("Type: " + this.getType().toString() + "\n");
+			sb.append("Message: " +  this.getMessage() + "\n");
+			if(this.getType().toString().equals("ChatMessage")) {
+				sb.append("Recipients: " + Arrays.toString(this.recipients) + "\n");
 			}
-			jsn = jsnObj.toString();
-			
 		}catch(Exception e) {
 			System.out.println("Something went wrong in messageing tostring");
 		}
-		return jsn;
+		return sb.toString();
 	}
+	
+	public enum Type{
+		ChatMessage, Login,
+	}
+	
 }
