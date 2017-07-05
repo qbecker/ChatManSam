@@ -86,9 +86,15 @@ public class Server implements Runnable{
 			// Here is where we can redirect messages to other client.
 			System.out.println(message.messageToString());
 			if(message.getType()== Type.Login) {
-				this.setUserName(message.getMessage());
-				putClientConn(this);
-				System.out.println(this.getUserName());
+				ClientConnection con = getClientConn(message.getMessage());
+				if(con == null) {
+					this.setUserName(message.getMessage());
+					putClientConn(this);
+					System.out.println(this.getUserName());
+					sendMessage(new Message(Type.Login, "Success"));
+				}else {
+					sendMessage(new Message(Type.Login, "Failed"));
+				}
 			}
 			if(message.getType() == Type.ChatMessage) {
 				String[] recips = message.getRecipients();

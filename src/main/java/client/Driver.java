@@ -37,17 +37,27 @@ public class Driver {
 			});
 	    	*/
 	    
+	    
+	    
+	    	
+	    
+		System.out.println("Enter a message to " + target);
+    	String inputLine;
+    	while(sc.hasNextLine()) {
+    	  inputLine = sc.nextLine();
+    	  System.out.println(inputLine);
+    	  client.sendMessage(new Message(Type.ChatMessage, inputLine, new String[] {target}));
+    	  System.out.println("Enter something");
+    	}
+    	sc.close();
+		    	
+	    	
+	    	
+	    	
+	    
 	    //take input and keep send it.
 	    	
-	    	System.out.println("Enter a message to " + target);
-	    	String inputLine;
-	    	while(sc.hasNextLine()) {
-	    	  inputLine = sc.nextLine();
-	    	  System.out.println(inputLine);
-	    	  client.sendMessage(new Message(Type.ChatMessage, inputLine, new String[] {target}));
-	    	  System.out.println("Enter something");
-	    	}
-	    	sc.close();
+	    	
 	    	
 	    }
 }

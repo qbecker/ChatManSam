@@ -10,6 +10,8 @@ public class Client extends SocketManager{
 	//private SocketManager socMan;
 	public String userName;
 	
+	public boolean loggedIn;
+	
 	
 	//create a new client
 	public static Client clientInit(String address, int port, String userName) {
@@ -30,6 +32,7 @@ public class Client extends SocketManager{
 	public Client(Socket socket, String userName) {
 		super(socket);
 		this.userName = userName;
+		this.loggedIn = false;
 		
 	}
 	
@@ -42,6 +45,13 @@ public class Client extends SocketManager{
 	public void readMessage(Message message) {
 			System.out.println("Received Message: ");
 			System.out.println(message.messageToString());
+			if(message.getType() == Type.Login) {
+				if(message.getMessage().equals("Success")) {
+					this.loggedIn = true;
+				}else {
+					System.out.println("Login failed");
+				}
+			}
 	}
 	@Override
 	public void disconnect() {

@@ -1,12 +1,7 @@
 package messaging;
 
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.Arrays;
-
-import org.json.JSONArray;
-
 
 
 public class Message implements Serializable{
@@ -71,7 +66,7 @@ public class Message implements Serializable{
 	}
 	
 	public enum Type{
-		ChatMessage, Login,
+		ChatMessage, Login
 	}
 	
 }
