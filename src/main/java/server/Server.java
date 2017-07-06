@@ -62,7 +62,7 @@ public class Server implements Runnable{
 		}
 		
 	}
-	private class ClientConnection extends SocketManager {
+	public class ClientConnection extends SocketManager {
 		
 		public String userName;
 		
