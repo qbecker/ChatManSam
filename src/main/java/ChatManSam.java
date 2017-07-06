@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import client.Client;
+import database.DAO;
 import messaging.Message;
 import messaging.Message.Type;
 import server.Server;
