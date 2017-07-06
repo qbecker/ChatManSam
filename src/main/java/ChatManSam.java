@@ -1,12 +1,26 @@
-package client;
+import java.util.Scanner;
+
+import client.Client;
 import messaging.Message;
 import messaging.Message.Type;
+import server.Server;
 
-import java.util.Scanner;
-public class Driver {
-    public static void main(String[] args) {
-        
-	    System.out.println("Hello world from client");
+public class ChatManSam {
+	public static void main(String[] args) {
+		if(args.length != 0 && args[0].equals("-s")) {
+			startServer();
+		}else {
+			StartClient();
+		}
+	}
+	
+	public static void startServer() {
+		System.out.println(" Starting in server mode...  " );
+  		 
+  		 Server server = new Server(8080);
+	}
+	public static void StartClient() {
+		System.out.println("Starting in server Mode");
 	    Scanner sc = new Scanner(System.in);
 	    System.out.println("Enter your username");
 	    String nameStr = sc.nextLine();
@@ -37,27 +51,15 @@ public class Driver {
 			});
 	    	*/
 	    
-	    
-	    
-	    	
-	    
 		System.out.println("Enter a message to " + target);
-    	String inputLine;
-    	while(sc.hasNextLine()) {
-    	  inputLine = sc.nextLine();
-    	  System.out.println(inputLine);
-    	  client.sendMessage(new Message(Type.ChatMessage, inputLine, new String[] {target}));
-    	  System.out.println("Enter something");
-    	}
-    	sc.close();
-		    	
-	    	
-	    	
-	    	
+	    	String inputLine;
+	    	while(sc.hasNextLine()) {
+	    	  inputLine = sc.nextLine();
+	    	  System.out.println(inputLine);
+	    	  client.sendMessage(new Message(Type.ChatMessage, inputLine, new String[] {target}));
+	    	  System.out.println("Enter something");
+	    	}
+	    	sc.close();
 	    
-	    //take input and keep send it.
-	    	
-	    	
-	    	
-	    }
+	}
 }

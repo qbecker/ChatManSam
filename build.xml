@@ -17,6 +17,7 @@
  <path id="compile.classpath">
     <pathelement location="${build}"/>
     <pathelement path="${lib}/json.jar"/>
+ 	<pathelement path="${lib}/junit-4.8.2.jar"/>
    </path>
 
   <target name="init" depends="clean">
@@ -30,7 +31,7 @@
 		<javac srcdir="${src}"
 		             includeantruntime="false"
 		             destdir="${build}">
-		         <classpath refid="classpath.test"/>
+		         <classpath refid="compile.classpath"/>
 		      </javac>
 	  </target>
 
@@ -63,7 +64,7 @@
   <target name="execute.client" depends = "compile"
         description="executes the client">
     <!-- Delete the ${build} and ${dist} directory trees -->
-     <java classname="client.Driver" fork="yes">
+     <java classname="ChatManSam" fork="yes">
            <classpath refid="compile.classpath"/>
          </java>
   </target>
@@ -85,7 +86,8 @@
   <target name="execute.server" depends = "compile"
         description="executes the server">
     <!-- Delete the ${build} and ${dist} directory trees -->
-     <java classname="server.Driver" fork="yes">
+     <java classname="ChatManSam" fork="yes">
+     			<arg value="-s"/>
            <classpath refid="compile.classpath"/>
          </java>
   </target>
