@@ -1,11 +1,10 @@
 package socket;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import messaging.Message;
-
 /*
  *	A class to manage sockets 
  * 
@@ -14,14 +13,15 @@ import messaging.Message;
 public abstract class SocketManager implements Runnable {
 
 	private Socket socket;
-	private BufferedReader inputRead;
-    private PrintWriter outputWriter;
+	private ObjectInputStream inputRead;
+    private ObjectOutputStream outputWriter;
 	
 	public SocketManager(Socket socket) {
 		this.socket = socket;
 		try {
-			inputRead = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			outputWriter = new PrintWriter(socket.getOutputStream());
+			outputWriter = new ObjectOutputStream(socket.getOutputStream());
+			inputRead = new ObjectInputStream(socket.getInputStream());
+			
 			new Thread(this).start();
 		}catch(Exception e) {
 			//todo fail gracefully
@@ -36,22 +36,39 @@ public abstract class SocketManager implements Runnable {
 	public void run() {
 		try {
 			while(!socket.isClosed()) {
-				readMessage(new Message(inputRead.readLine().trim()));
+				Message msg = (Message) inputRead.readObject();
+				readMessage(msg);
 			}
 		}catch(Exception e) {
 			//todo: fail gracefully and clean up resources
-			System.out.println("");
 			System.out.println("Disconnected");
+			System.out.println(e);
+			closeConnection();
+			System.out.println("socket closed");
 		}
 		
 	}
 	
+	
 	public void sendMessage(Message message) {
-		outputWriter.println(message.toJsonString());
-		outputWriter.flush();
+		try {
+			outputWriter.writeObject(message);
+			outputWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void closeConnection() {
+		try {inputRead.close();}catch(Exception e) {System.out.println(e);}
+		try {outputWriter.close();}catch(Exception e) {System.out.println(e);}
+		try {socket.close();}catch(Exception e) {System.out.println(e);}
+
 	}
 	
 	
 	public abstract void readMessage(Message message);
+	public abstract void disconnect();
 	
 }
