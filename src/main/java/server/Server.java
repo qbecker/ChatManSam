@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import messaging.Message;
 import socket.SocketManager;
+import utils.Logger.Log;
 import messaging.Message.Type;
 
 public class Server implements Runnable{
@@ -39,7 +40,7 @@ public class Server implements Runnable{
 			try {
 				ret = connectedClients.get(userName);
 			}catch(Exception e) {
-				System.out.println("Something went wrong in getCLientConn");
+				Log.debug("Something went wrong in getCLientConn");
 			}
 		}
 		return ret;
@@ -84,13 +85,13 @@ public class Server implements Runnable{
 		public void readMessage(Message message) {
 			// all incoming messages from connected clients come through here
 			// Here is where we can redirect messages to other client.
-			System.out.println(message.messageToString());
+			Log.debug(message.messageToString());
 			if(message.getType()== Type.Login) {
 				ClientConnection con = getClientConn(message.getMessage());
 				if(con == null) {
 					this.setUserName(message.getMessage());
 					putClientConn(this);
-					System.out.println(this.getUserName());
+					Log.debug(this.getUserName());
 					sendMessage(new Message(Type.Login, "Success"));
 				}else {
 					sendMessage(new Message(Type.Login, "Failed"));
@@ -103,7 +104,7 @@ public class Server implements Runnable{
 					con = getClientConn(recips[i]);
 					if(con != null) {
 						con.sendMessage(new Message(Type.ChatMessage, message.getMessage(), new String[] {this.userName}));
-						System.out.println("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
+						Log.debug("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
 					}
 				}
 			}

@@ -3,6 +3,8 @@ package messaging;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import utils.Logger.Log;
+
 
 public class Message implements Serializable{
 	Type type;
@@ -60,7 +62,7 @@ public class Message implements Serializable{
 				sb.append("Recipients: " + Arrays.toString(this.recipients) + "\n");
 			}
 		}catch(Exception e) {
-			System.out.println("Something went wrong in messageing tostring");
+			Log.debug("Something went wrong in messageing tostring");
 		}
 		return sb.toString();
 	}

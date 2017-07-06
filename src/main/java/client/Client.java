@@ -5,6 +5,7 @@ import java.net.Socket;
 import messaging.Message;
 import messaging.Message.Type;
 import socket.SocketManager;
+import utils.Logger.*;
 public class Client extends SocketManager{
 
 	//private SocketManager socMan;
@@ -24,7 +25,7 @@ public class Client extends SocketManager{
 		    client = new Client(socket, userName);
 		    
 		}catch(Exception e) {
-			System.out.println("Error in creating client");
+			Log.debug("Error in creating client");
 		}
 		return client;
 	}
@@ -43,15 +44,15 @@ public class Client extends SocketManager{
 	//over writen method from socketManager for behavior on incoming messages
 	@Override
 	public void readMessage(Message message) {
-			System.out.println("Received Message: ");
-			System.out.println(message.messageToString());
-			if(message.getType() == Type.Login) {
-				if(message.getMessage().equals("Success")) {
-					this.loggedIn = true;
-				}else {
-					System.out.println("Login failed");
-				}
+		Log.debug("Received Message: ");
+		Log.debug(message.messageToString());
+		if(message.getType() == Type.Login) {
+			if(message.getMessage().equals("Success")) {
+				this.loggedIn = true;
+			}else {
+				Log.debug("Login failed");
 			}
+		}
 	}
 	@Override
 	public void disconnect() {

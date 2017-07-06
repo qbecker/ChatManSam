@@ -5,10 +5,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import messaging.Message;
+import utils.Logger.Log;
 /*
  *	A class to manage sockets 
  * 
  */
+
 
 public abstract class SocketManager implements Runnable {
 
@@ -21,11 +23,10 @@ public abstract class SocketManager implements Runnable {
 		try {
 			outputWriter = new ObjectOutputStream(socket.getOutputStream());
 			inputRead = new ObjectInputStream(socket.getInputStream());
-			
 			new Thread(this).start();
 		}catch(Exception e) {
 			//todo fail gracefully
-			System.out.println("socket creation failed");
+			Log.debug("socket creation failed");
 		}
 		
 	}
@@ -41,10 +42,10 @@ public abstract class SocketManager implements Runnable {
 			}
 		}catch(Exception e) {
 			//todo: fail gracefully and clean up resources
-			System.out.println("Disconnected");
-			System.out.println(e);
+			Log.debug("Disconnected");
+			e.printStackTrace();
 			closeConnection();
-			System.out.println("socket closed");
+			Log.debug("socket closed");
 		}
 		
 	}
@@ -61,9 +62,9 @@ public abstract class SocketManager implements Runnable {
 	}
 	
 	public void closeConnection() {
-		try {inputRead.close();}catch(Exception e) {System.out.println(e);}
-		try {outputWriter.close();}catch(Exception e) {System.out.println(e);}
-		try {socket.close();}catch(Exception e) {System.out.println(e);}
+		try {inputRead.close();}catch(Exception e) {e.printStackTrace();}
+		try {outputWriter.close();}catch(Exception e) {e.printStackTrace();}
+		try {socket.close();}catch(Exception e) {e.printStackTrace();}
 
 	}
 	
