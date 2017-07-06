@@ -12,12 +12,14 @@
 		<pathelement location="${build}"/>
 	 	<pathelement path="${lib}/junit-4.8.2.jar"/>
 		<pathelement path="${lib}/json.jar"/>
+		<pathelement path="${lib}/sqlite-jdbc-3.19.3.jar"/>
 	  </path>
 	
  <path id="compile.classpath">
     <pathelement location="${build}"/>
     <pathelement path="${lib}/json.jar"/>
  	<pathelement path="${lib}/junit-4.8.2.jar"/>
+ 	<pathelement path="${lib}/sqlite-jdbc-3.19.3.jar"/>
    </path>
 
   <target name="init" depends="clean">

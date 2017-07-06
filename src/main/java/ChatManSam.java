@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import client.Client;
+import database.DAO;
 import messaging.Message;
 import messaging.Message.Type;
 import server.Server;
@@ -11,7 +12,27 @@ public class ChatManSam {
 		if(args.length != 0 && args[0].equals("-s")) {
 			startServer();
 		}else {
-			StartClient();
+			//StartClient();
+			Thread insert = new Thread(){
+				public void run() {
+					for(int i = 0; i < 200; i++) {
+						DAO.insertUser("Quinten", "passssss", "online");
+					}
+				}
+			};
+			Thread get = new Thread(){
+				public void run() {
+					for(int j = 0; j < 200; j++) {
+						Log.debug(DAO.getPassWord("Quinten"));
+					}
+				}
+			};
+			
+			insert.start();
+			get.start();
+			
+			
+			Log.debug(DAO.getPassWord("Quinten"));
 		}
 	}
 	
