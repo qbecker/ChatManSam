@@ -8,6 +8,12 @@
   <property name="dist" location="dist"/>
   <property name="lib" value="./lib" />
   
+	<path id="classpath.test">
+		<pathelement location="${build}"/>
+	 	<pathelement path="${lib}/junit-4.8.2.jar"/>
+		<pathelement path="${lib}/json.jar"/>
+	  </path>
+	
  <path id="compile.classpath">
     <pathelement location="${build}"/>
     <pathelement path="${lib}/json.jar"/>
@@ -19,6 +25,14 @@
     <!-- Create the build directory structure used by compile -->
     <mkdir dir="${build}"/>
   </target>
+	
+	<target name="test-compile" depends="init">
+		<javac srcdir="${src}"
+		             includeantruntime="false"
+		             destdir="${build}">
+		         <classpath refid="classpath.test"/>
+		      </javac>
+	  </target>
 
   <target name="compile" depends="init"
         description="compile the source">
@@ -53,6 +67,20 @@
            <classpath refid="compile.classpath"/>
          </java>
   </target>
+	
+		
+	<target name="test" depends="test-compile">
+	    <junit printsummary="on" haltonfailure="yes" fork="true">
+	        <classpath>
+	          <path refid="classpath.test"/>
+	          <pathelement location="${test.build.dir}"/>
+	        </classpath>
+	        <formatter type="brief" usefile="false" />
+	        <batchtest>
+	            <fileset dir="build" includes="**/*Test.class" />
+	        </batchtest>
+	    </junit>
+	  </target>
   
   <target name="execute.server" depends = "compile"
         description="executes the server">
