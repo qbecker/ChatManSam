@@ -12,7 +12,21 @@ public class ChatManSam {
 		if(args.length != 0 && args[0].equals("-s")) {
 			startServer();
 		}else {
-			StartClient();
+			//StartClient();
+			
+			Thread insertStuff= new Thread() {
+				public void run() {
+					for(int i =0; i < 100; i++) {
+						boolean test = DAO.insertUser("Quinten", "Hunter2", "Online");
+						if(test) {
+							Log.debug("worked");
+							Log.debug(DAO.getPassWord("Quinten"));
+						}
+					}
+				}
+			};
+			
+			insertStuff.start();
 		}
 	}
 	

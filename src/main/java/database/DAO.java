@@ -4,44 +4,67 @@ import database.Querys;
 import utils.Logger.Log;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class DAO{
 	
 	public static Connection conn = database.DataBaseDriver.ConnectAndCreateDb();
 	
-	public static boolean insertUser(String userName, String passWord, String status) {
+	public static boolean insert(String query, List params ) {
 		boolean ret = true;
-		synchronized(conn){
+		synchronized(conn) {
 			try {
-				PreparedStatement  insert = conn.prepareStatement(Querys.insertUser);
-				insert.setString(1, userName);
-				insert.setString(2, passWord);
-				insert.setString(3, status);
+				PreparedStatement insert = conn.prepareStatement(query);
+				int i = 1;
+				for(Object item : params ) {
+					Log.debug(""+ i);
+					insert.setObject(i, item);
+					i++;
+				}
 				insert.executeUpdate();
-				Log.debug("Inserted User " + userName );
-			}catch(Exception e) {
+			} catch (SQLException e) {
 				ret = false;
-				e.printStackTrace();
+				Log.debug(e.getMessage());
 			}
 		}
 		return ret;
 	}
 	
-	public static String getPassWord(String userName) {
-		String ret = null;
+	
+	public static ResultSet get(String query, List params) {
+		ResultSet result = null; 
 		synchronized(conn) {
 			try {
-				PreparedStatement getPass = conn.prepareStatement(Querys.getUserPass);
-				getPass.setString(1, userName);
-				
-				ResultSet result = getPass.executeQuery();
-				while(result.next()) {
-					ret = result.getString("password");
+				PreparedStatement get = conn.prepareStatement(query);
+				int i = 1;
+				for(Object item : params ) {
+					Log.debug(""+ i);
+					get.setObject(i, item);
+					i++;
 				}
-				
+				result = get.executeQuery();
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
+		}
+		return result;
+	}
+	
+	
+	public static boolean insertUser(String userName, String passWord, String status) {
+		String[] parms = {userName, passWord, status};
+		return insert(Querys.insertUser, Arrays.asList(parms));
+	}
+	
+	
+	public static String getPassWord(String userName) {
+		String ret = null;
+		ResultSet results = get(Querys.getUserPass, Arrays.asList(new String[] {userName}));
+		try {
+			ret = results.getString("password");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return ret;
 	}
