@@ -18,7 +18,7 @@ public class DAO{
 				PreparedStatement insert = conn.prepareStatement(query);
 				int i = 1;
 				for(Object item : params ) {
-					Log.debug(""+ i);
+					//Log.debug(""+ i);
 					insert.setObject(i, item);
 					i++;
 				}
@@ -65,7 +65,7 @@ public class DAO{
 		try {
 			ret = results.getString("username");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return ret;
 	}

@@ -17,6 +17,9 @@ public class ChatManSam {
 			Thread insertStuff = new Thread() {
 				public void run() {
 					boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
+
+
+					StartClient();
 				}
 			};
 			insertStuff.start();
@@ -32,7 +35,6 @@ public class ChatManSam {
 					}
 				}
 			};*/
-			StartClient();
 		}
 	}
 
@@ -48,8 +50,36 @@ public class ChatManSam {
     Log.debug("Enter your username:");
     String nameStr = sc.nextLine();
 
-		String str = DAO.getUserName(nameStr);
-		Log.debug(str);
+		if(DAO.getUserName(nameStr) == null) {
+			Log.debug("Username does not exist.");
+
+			boolean looping = true;
+			while(looping) {
+
+				Log.debug("Would you like to make an account? [Y/N]");
+				Scanner usc = new Scanner(System.in);
+				String str = usc.nextLine();
+
+				Log.debug(str);
+
+				if(str.equals("Y") || str.equals("y")) {
+					Log.debug("Creating account... ");
+					// TODO: CREATE ACCOUNT METHOD
+					looping = false;
+
+				} else if(str.equals("N") || str.equals("n")) {
+					Log.debug(nameStr + " will not be created.");
+					// TODO: Loop it back into client input loop.
+					looping = false;
+
+				} else {
+					Log.debug("Command not recognized, please try again. ");
+
+				}
+			}
+		} else {
+			Log.debug("Username exists!");
+		}
 
 
 
