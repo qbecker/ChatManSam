@@ -22,7 +22,7 @@ public class Server implements Runnable{
 		this.port = port;
 		Thread thread = new Thread(this);
 		thread.start();
-		boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
+		//boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
 	}
 
 	public boolean putClientConn(ClientConnection conn) {
@@ -98,6 +98,17 @@ public class Server implements Runnable{
 					sendMessage(new Message(Type.Login, "Success"));
 				} else {
 					sendMessage(new Message(Type.Login, "Failed"));
+				}
+			}
+			if(message.getType() == Type.CreateAccount) {
+				String[] splitMsg = message.getMessage().toString().split(" ");
+				boolean created = DAO.insertUser(splitMsg[0], splitMsg[1], "New User");
+				if(created) {
+					Log.debug("Account Creation successful.");
+					sendMessage(new Message(Type.CreateAccount, "Success"));
+				}else {
+					Log.debug("Account Creation Failed.");
+					sendMessage(new Message(Type.CreateAccount, "Failed"));
 				}
 			}
 

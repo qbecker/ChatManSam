@@ -22,7 +22,7 @@ public class Client extends SocketManager{
 			//create connection to server
 			Socket socket = new Socket(address, port);
 			//create new client object for use of socketManager
-		  client = new Client(socket);
+			client = new Client(socket);
 
 		}catch(Exception e) {
 			Log.debug("Error in creating client");
@@ -33,7 +33,6 @@ public class Client extends SocketManager{
 	public Client(Socket socket) {
 		super(socket);
 		this.loggedIn = false;
-		SignUpLogIn();
 		// Get username from server, buuuut having issues with this.
 		// Not sure how to set the connectedClient username on the server.
 		// I tried returning a string from SignUpLogIn()
@@ -59,6 +58,14 @@ public class Client extends SocketManager{
 				Log.debug("Username or password incorrect.");
 			}
 		}
+		if(message.getType() == Type.CreateAccount) {
+			if(message.getMessage().equals("Success")) {
+				Log.debug("Account Creation Sucessful");
+			}
+			if(message.getMessage().equals("Success")) {
+				Log.debug("Account Creation Failed");
+			}
+		}
 	}
 
 	@Override
@@ -67,7 +74,7 @@ public class Client extends SocketManager{
 
 	public void SignUpLogIn() {
 		Log.debug("Logging in with User: Shelby | Pass: Largemelons1");
-		sendMessage(new Message(Type.Login, "Shelby Largemelons1"));
+		sendMessage(new Message(Type.CreateAccount, "Shelby Largemelons1"));
 	}
 
 	public enum SignIn {

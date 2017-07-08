@@ -68,7 +68,7 @@ public class Message implements Serializable{
 	}
 
 	public enum Type {
-		ChatMessage, Login, EchoName
+		ChatMessage, Login, CreateAccount, EchoName
 	}
 
 }

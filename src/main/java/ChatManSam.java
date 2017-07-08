@@ -31,12 +31,21 @@ public class ChatManSam {
 
 	public static void StartServer() {
 		Log.debug(" Starting in server mode...  ");
-  	Server server = new Server(8080);
+		Server server = new Server(8080);
 	}
 
 	public static void StartClient() {
 		Log.debug(" Starting in client mode... ");
 		Client client = Client.clientInit("localhost", 8080);
+		Thread t = new Thread() {
+			public void run() {
+				for(int i = 0; i < 3; i++) {
+					client.SignUpLogIn();
+				}
+				
+			}
+		};
+		t.start();
 	}
 
 
