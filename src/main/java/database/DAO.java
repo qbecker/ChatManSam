@@ -57,7 +57,7 @@ public class DAO{
 		return insert(Querys.insertUser, Arrays.asList(parms));
 	}
 
-	// Argument is inputName because I wanted to know that it was from the scanner in ChatManSam.
+	// Argument is inputName because I wanted to know that it is scanner input
 	// I want to talk to you about getting a template for these get requests.
 	public static String getUserName(String inputName) {
 		String ret = null;

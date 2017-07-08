@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import database.DAO;
 
 import messaging.Message;
 import socket.SocketManager;
@@ -13,16 +14,17 @@ import messaging.Message.Type;
 public class Server implements Runnable{
 	private int port;
 	private ServerSocket servSoc;
-	
+
 	private  HashMap<String, ClientConnection> connectedClients;
-	
+
 	public Server(int port) {
 		this.connectedClients = new HashMap<String, ClientConnection>();
 		this.port = port;
 		Thread thread = new Thread(this);
 		thread.start();
+		boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
 	}
-	
+
 	public boolean putClientConn(ClientConnection conn) {
 		boolean ret = true;
 		synchronized(connectedClients) {
@@ -34,13 +36,14 @@ public class Server implements Runnable{
 		}
 		return ret;
 	}
+
 	public ClientConnection getClientConn(String userName) {
 		ClientConnection ret = null;
 		synchronized(connectedClients) {
 			try {
 				ret = connectedClients.get(userName);
 			}catch(Exception e) {
-				Log.debug("Something went wrong in getCLientConn");
+				Log.debug("Something went wrong in getClientConn");
 			}
 		}
 		return ret;
@@ -54,20 +57,18 @@ public class Server implements Runnable{
 			while(true) {
 				Socket soc = servSoc.accept();
 				ClientConnection client = new ClientConnection(soc);
-				
+
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	public class ClientConnection extends SocketManager {
-		
+
 		public String userName;
-		
-		
-		
+
 		public String getUserName() {
 			return userName;
 		}
@@ -78,7 +79,7 @@ public class Server implements Runnable{
 
 		public ClientConnection(Socket socket) {
 			super(socket);
-			
+
 		}
 
 		@Override
@@ -86,14 +87,31 @@ public class Server implements Runnable{
 			// all incoming messages from connected clients come through here
 			// Here is where we can redirect messages to other client.
 			Log.debug(message.messageToString());
-			if(message.getType()== Type.Login) {
+
+			if(message.getType() == Type.Login) {
+				//splitMsg[0] is username, splitMsg[1] is password
+				String[] splitMsg = message.getMessage().toString().split(" ");
+				String checkPW = DAO.getPassWord(splitMsg[0]);
+				if(checkPW != splitMsg[1])
+				{
+					Log.debug("Log in successful.");
+					sendMessage(new Message(Type.Login, "Success"));
+				} else {
+					sendMessage(new Message(Type.Login, "Failed"));
+				}
+			}
+
+
+
+
+			/*if(message.getType()== Type.Login) {
 				ClientConnection con = getClientConn(message.getMessage());
 				if(con == null) {
 					this.setUserName(message.getMessage());
 					putClientConn(this);
 					Log.debug(this.getUserName());
 					sendMessage(new Message(Type.Login, "Success"));
-				}else {
+				} else {
 					sendMessage(new Message(Type.Login, "Failed"));
 				}
 			}
@@ -107,16 +125,11 @@ public class Server implements Runnable{
 						Log.debug("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
 					}
 				}
-			}
+			}*/
 		}
 
 		@Override
 		public void disconnect() {
 		}
-
 	}
-
-
-
-  
 }

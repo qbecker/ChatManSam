@@ -11,18 +11,9 @@ import utils.Logger.Log;
 public class ChatManSam {
 	public static void main(String[] args) {
 		if(args.length != 0 && args[0].equals("-s")) {
-			startServer();
+			StartServer();
 		} else {
-			//StartClient();
-			Thread insertStuff = new Thread() {
-				public void run() {
-					boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
-
-
-					StartClient();
-				}
-			};
-			insertStuff.start();
+			StartClient();
 
 			/*Thread insertStuff= new Thread() {
 				public void run() {
@@ -38,49 +29,15 @@ public class ChatManSam {
 		}
 	}
 
-	public static void startServer() {
-		Log.debug(" Starting in server mode...  " );
+	public static void StartServer() {
+		Log.debug(" Starting in server mode...  ");
   	Server server = new Server(8080);
 	}
 
 	public static void StartClient() {
-		Log.debug("Client starting.");
-    Scanner sc = new Scanner(System.in);
-
-    Log.debug("Enter your username:");
-    String nameStr = sc.nextLine();
-
-		if(DAO.getUserName(nameStr) == null) {
-			Log.debug("Username does not exist.");
-
-			boolean looping = true;
-			while(looping) {
-
-				Log.debug("Would you like to make an account? [Y/N]");
-				Scanner usc = new Scanner(System.in);
-				String str = usc.nextLine();
-
-				Log.debug(str);
-
-				if(str.equals("Y") || str.equals("y")) {
-					Log.debug("Creating account... ");
-					// TODO: CREATE ACCOUNT METHOD
-					looping = false;
-
-				} else if(str.equals("N") || str.equals("n")) {
-					Log.debug(nameStr + " will not be created.");
-					// TODO: Loop it back into client input loop.
-					looping = false;
-
-				} else {
-					Log.debug("Command not recognized, please try again. ");
-
-				}
-			}
-		} else {
-			Log.debug("Username exists!");
-		}
-
+		Log.debug(" Starting in client mode... ");
+		Client client = Client.clientInit("localhost", 8080);
+	}
 
 
 
@@ -128,5 +85,5 @@ public class ChatManSam {
     	}
     	sc.close();*/
 
-	}
+
 }

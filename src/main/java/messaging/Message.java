@@ -10,7 +10,7 @@ public class Message implements Serializable{
 	Type type;
 	String message;
 	String[] recipients;
-	
+
 
 	public Message(Type type, String message) {
 		this.type = type;
@@ -44,7 +44,7 @@ public class Message implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public String[] getRecipients() {
 		return recipients;
 	}
@@ -57,18 +57,18 @@ public class Message implements Serializable{
 		StringBuilder sb = new StringBuilder();
 		try{
 			sb.append("Type: " + this.getType().toString() + "\n");
-			sb.append("Message: " +  this.getMessage() + "\n");
+			sb.append("Message: " +  this.getMessage());
 			if(this.getType().toString().equals("ChatMessage")) {
 				sb.append("Recipients: " + Arrays.toString(this.recipients) + "\n");
 			}
 		}catch(Exception e) {
-			Log.debug("Something went wrong in messageing tostring");
+			Log.debug("Something went wrong in messaging tostring");
 		}
 		return sb.toString();
 	}
-	
-	public enum Type{
-		ChatMessage, Login
+
+	public enum Type {
+		ChatMessage, Login, EchoName
 	}
-	
+
 }
