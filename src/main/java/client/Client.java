@@ -6,24 +6,24 @@ import messaging.Message;
 import messaging.Message.Type;
 import socket.SocketManager;
 import utils.Logger.*;
-public class Client extends SocketManager{
 
+
+public class Client extends SocketManager{
 	//private SocketManager socMan;
 	public String userName;
-	
 	public boolean loggedIn;
-	
-	
+
+
 	//create a new client
 	public static Client clientInit(String address, int port, String userName) {
-		
+
 		Client client = null;
 		try {
 			//create connection to server
 			Socket socket = new Socket(address, port);
 			//create new client object for use of socketManager
 		    client = new Client(socket, userName);
-		    
+
 		}catch(Exception e) {
 			Log.debug("Error in creating client");
 		}
@@ -34,9 +34,9 @@ public class Client extends SocketManager{
 		super(socket);
 		this.userName = userName;
 		this.loggedIn = false;
-		
+
 	}
-	
+
 	public void login() {
 		sendMessage(new Message(Type.Login, userName));
 	}
@@ -56,7 +56,7 @@ public class Client extends SocketManager{
 	}
 	@Override
 	public void disconnect() {
-		
+
 	}
-	
+
 }
