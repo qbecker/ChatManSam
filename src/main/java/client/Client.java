@@ -50,6 +50,7 @@ public class Client extends SocketManager{
 	@Override
 	public void readMessage(Message message) {
 		Log.debug("Received Message: ");
+		Log.debug("New Message on client: " + this.userName);
 		Log.debug(message.messageToString());
 		if(message.getType() == Type.Login) {
 			if(message.getMessage().equals("Success")) {
@@ -65,6 +66,9 @@ public class Client extends SocketManager{
 			if(message.getMessage().equals("Success")) {
 				Log.debug("Account Creation Failed");
 			}
+		}
+		if(message.getType() == Type.ChatRoomMessage) {
+			Log.debug(message.getMessage());
 		}
 	}
 

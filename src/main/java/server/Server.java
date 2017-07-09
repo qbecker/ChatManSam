@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+
+import chatroom.ChatRoom;
 import database.DAO;
 
 import messaging.Message;
@@ -16,9 +18,11 @@ public class Server implements Runnable{
 	private ServerSocket servSoc;
 
 	private  HashMap<String, ClientConnection> connectedClients;
+	private 	 HashMap<String, ChatRoom> currentChatRooms;
 
 	public Server(int port) {
 		this.connectedClients = new HashMap<String, ClientConnection>();
+		this.currentChatRooms = new HashMap<String, ChatRoom>();
 		this.port = port;
 		Thread thread = new Thread(this);
 		thread.start();
@@ -31,6 +35,40 @@ public class Server implements Runnable{
 			try {
 				connectedClients.put(conn.getUserName(), conn);
 			}catch(Exception e) {
+				ret = false;
+			}
+		}
+		return ret;
+	}
+	
+	public boolean removeChatRoom(String name) {
+		boolean ret = true;
+		synchronized(currentChatRooms) {
+			ChatRoom exists = currentChatRooms.get(name);
+			if(exists != null) {
+				currentChatRooms.remove(name);
+			}else {
+				ret = false;
+			}
+		}
+		return ret;
+	}
+	
+	public ChatRoom getChatRoom(String name) {
+		ChatRoom ret = null;
+		synchronized(currentChatRooms){
+			ret = currentChatRooms.get(name);
+		}
+		return ret;
+	}
+	
+	public boolean putChatRoom(ChatRoom room) {
+		boolean ret = true;
+		synchronized(currentChatRooms) {
+			ChatRoom exists = currentChatRooms.get(room.name);
+			if(exists == null) {
+				currentChatRooms.put(room.name, room);
+			}else {
 				ret = false;
 			}
 		}
@@ -86,11 +124,12 @@ public class Server implements Runnable{
 		public void readMessage(Message message) {
 			// all incoming messages from connected clients come through here
 			// Here is where we can redirect messages to other client.
+			
 			Log.debug(message.messageToString());
 
 			if(message.getType() == Type.Login) {
 				//splitMsg[0] is username, splitMsg[1] is password
-				String[] splitMsg = message.getMessage().toString().split(" ");
+				/*String[] splitMsg = message.getMessage().toString().split(" ");
 				String checkPW = DAO.getPassWord(splitMsg[0]);
 				if(checkPW != splitMsg[1])
 				{
@@ -98,7 +137,9 @@ public class Server implements Runnable{
 					sendMessage(new Message(Type.Login, "Success"));
 				} else {
 					sendMessage(new Message(Type.Login, "Failed"));
-				}
+				}*/
+				putClientConn(this);
+				sendMessage(new Message(Type.Login, "Success"));
 			}
 			if(message.getType() == Type.CreateAccount) {
 				String[] splitMsg = message.getMessage().toString().split(" ");
@@ -111,11 +152,19 @@ public class Server implements Runnable{
 					sendMessage(new Message(Type.CreateAccount, "Failed"));
 				}
 			}
-
-
-
-
-			/*if(message.getType()== Type.Login) {
+			if(message.getType() == Type.CreateChatRoom) {
+				Log.debug("Entering create chatx");
+				ChatRoom chat = new ChatRoom(message.getMessage(), message.getRecipients());
+				boolean created = putChatRoom(chat);
+				if(created) {
+					Log.debug("Chat room created: " + chat.name);
+					sendMessage(new Message(Type.CreateChatRoom, "Success"));
+				}else {
+					Log.debug("Chat room already exists: " + chat.name);
+					sendMessage(new Message(Type.ChatRoomMessage, "Failed"));
+				}
+			}
+			if(message.getType()== Type.Login) {
 				ClientConnection con = getClientConn(message.getMessage());
 				if(con == null) {
 					this.setUserName(message.getMessage());
@@ -136,7 +185,21 @@ public class Server implements Runnable{
 						Log.debug("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
 					}
 				}
-			}*/
+			}
+			if(message.getType() == Type.ChatRoomMessage) {
+				ChatRoom chat = getChatRoom(message.getRecipients()[0]);
+				if(chat != null) {
+					String[] members = chat.getAllMembers();
+					for(int i = 0; i < members.length; i++) {
+						ClientConnection con = null;
+						con = getClientConn(members[i]);
+						if(con != null) {
+							con.sendMessage(new Message(Type.ChatRoomMessage, message.getMessage(), new String[] {message.getRecipients()[0]}, this.getUserName()));
+							Log.debug("Group Message From: " + this.userName +" to: "+ members[i] + " Containing: " + message.getMessage());
+						}
+					}
+				}
+			}
 		}
 
 		@Override

@@ -37,15 +37,6 @@ public class ChatManSam {
 	public static void StartClient() {
 		Log.debug(" Starting in client mode... ");
 		Client client = Client.clientInit("localhost", 8080);
-		Thread t = new Thread() {
-			public void run() {
-				for(int i = 0; i < 3; i++) {
-					client.SignUpLogIn();
-				}
-				
-			}
-		};
-		t.start();
 	}
 
 
