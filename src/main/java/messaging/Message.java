@@ -22,12 +22,10 @@ public class Message implements Serializable{
 		this.message = message;
 		this.recipients = recipients;
 	}
-	
 	public Message(Type type, String message, String message2) {
 		this.type = type;
 		this.message = message;
 		this.message2 = message2;
-		
 	}
 
 

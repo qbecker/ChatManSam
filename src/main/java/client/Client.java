@@ -51,7 +51,7 @@ public class Client extends SocketManager {
 			if(message.getMessage().equals("Success")) {
 				Log.debug("The log in was successful " + userName);
 				this.loggedIn = true;
-			} if(message.getMessage().equals("Failed")) {
+			}else if(message.getMessage().equals("Failed")) {
 				Log.debug("Username or password incorrect.");
 			} else {
 				Log.debug("Login received neither success nor failed.");

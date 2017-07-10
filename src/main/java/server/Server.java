@@ -110,9 +110,9 @@ public class Server implements Runnable{
 					if(con == null) {
 						putClientConn(this);
 						Log.debug(this.getUserName());
-						sendMessage(new Message(Type.Login, "Success"));
+						sendMessage(new Message(Type.Login, "Success", "You have been logged in."));
 					}else {
-						sendMessage(new Message(Type.Login, "Failed"));
+						sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
 					}
 					
 				
