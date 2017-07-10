@@ -11,10 +11,28 @@ import utils.Logger.Log;
 
 public class DataBaseDriver {
 	
-	public static Connection ConnectAndCreateDb() {
+	public static Connection ConnectAndCreateDb(DBType type, DBRole role) {
+		String dbURL = "jdbc:sqlite:";
+		
 		Connection conn = null;
 		try {
-			String dbURL = "jdbc:sqlite:serverDB.db";
+			switch(type) {
+				case Test:
+					if(role == DBRole.Client) {
+						dbURL += "./build/serverDB.db";
+					}else {
+						dbURL += "./build/clientDB.db";
+					}
+					break;
+				case Prod:
+					if(role == DBRole.Client) {
+						dbURL += "clientDB.db";
+					}else {
+						dbURL += "serverDB.db";
+					}
+					break;
+			}
+			
 			conn = DriverManager.getConnection(dbURL);
 			Statement setup = conn.createStatement();
 			setup.execute(Schema.SERVERSCHEMA);
@@ -25,4 +43,17 @@ public class DataBaseDriver {
 		
 		return conn;
 	}
+	public enum DBType{
+		Test, Prod
+	}
+	public enum DBRole{
+		Server, Client
+	}
 }
+
+
+
+
+
+
+

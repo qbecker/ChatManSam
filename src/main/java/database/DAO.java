@@ -1,5 +1,7 @@
 package database;
 
+import database.DataBaseDriver.DBRole;
+import database.DataBaseDriver.DBType;
 import database.Querys;
 import utils.Logger.Log;
 
@@ -9,7 +11,7 @@ import java.util.List;
 
 public class DAO{
 
-	public static Connection conn = database.DataBaseDriver.ConnectAndCreateDb();
+	public static Connection conn = database.DataBaseDriver.ConnectAndCreateDb(DBType.Test, DBRole.Server);
 
 	public static boolean insert(String query, List params ) {
 		boolean ret = true;
