@@ -39,8 +39,8 @@ public class ChatManSam {
 		Client client = Client.clientInit("localhost", 8080);
 		Thread t = new Thread() {
 			public void run() {
-				for(int i = 0; i < 3; i++) {
-					client.SignUpLogIn();
+				for(int i = 0; i < 1; i++) {
+					client.signUpLogIn();
 				}
 				
 			}

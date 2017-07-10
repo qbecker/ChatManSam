@@ -2,6 +2,7 @@ package messaging;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import client.Client.AccountObject;
 
 import utils.Logger.Log;
 
@@ -10,6 +11,7 @@ public class Message implements Serializable{
 	Type type;
 	String message;
 	String[] recipients;
+	AccountObject accObject;
 
 
 	public Message(Type type, String message) {
@@ -21,7 +23,12 @@ public class Message implements Serializable{
 		this.message = message;
 		this.recipients = recipients;
 	}
-
+	
+	public Message(Type type, AccountObject object) {
+		this.type = type;
+		this.accObject = object;
+		
+	}
 
 
 	public Type getType() {
@@ -65,6 +72,10 @@ public class Message implements Serializable{
 			Log.debug("Something went wrong in messaging tostring");
 		}
 		return sb.toString();
+	}
+	
+	public AccountObject getAccObject() {
+		return this.accObject;
 	}
 
 	public enum Type {

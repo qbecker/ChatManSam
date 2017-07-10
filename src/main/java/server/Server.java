@@ -10,6 +10,7 @@ import messaging.Message;
 import socket.SocketManager;
 import utils.Logger.Log;
 import messaging.Message.Type;
+import client.Client.AccountObject;
 
 public class Server implements Runnable{
 	private int port;
@@ -88,13 +89,21 @@ public class Server implements Runnable{
 			// Here is where we can redirect messages to other client.
 			Log.debug(message.messageToString());
 
-			if(message.getType() == Type.Login) {
+			if(message.getType() == Type.EchoName) {
+				// receive the object from the message.
+				
+				AccountObject accObject = message.getAccObject();
+				Log.debug("Account Name: " + accObject.accName);
+				Log.debug("Account Pass: " + accObject.accPass);
+				
+				
+			}
+			if(message.getType() == Type.Login)	{
 				//splitMsg[0] is username, splitMsg[1] is password
 				String[] splitMsg = message.getMessage().toString().split(" ");
 				String checkPW = DAO.getPassWord(splitMsg[0]);
 				if(checkPW != splitMsg[1])
 				{
-					Log.debug("Log in successful.");
 					sendMessage(new Message(Type.Login, "Success"));
 				} else {
 					sendMessage(new Message(Type.Login, "Failed"));

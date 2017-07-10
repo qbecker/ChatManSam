@@ -16,7 +16,7 @@ public abstract class SocketManager implements Runnable {
 
 	private Socket socket;
 	private ObjectInputStream inputRead;
-  private ObjectOutputStream outputWriter;
+	private ObjectOutputStream outputWriter;
 
 	public SocketManager(Socket socket) {
 		this.socket = socket;
