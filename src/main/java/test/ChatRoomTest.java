@@ -31,9 +31,22 @@ public class ChatRoomTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.debug("Hello");
 		client2.sendMessage(new Message(Type.CreateChatRoom, "TestChatRoom", new String[] {client.userName,testUserName2 }));
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		client.sendMessage(new Message(Type.ChatRoomMessage, "TestingChatRoom", new String[] {client.userName,testUserName2 }, client.userName));
 		Log.debug("hmmm");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		
 		
