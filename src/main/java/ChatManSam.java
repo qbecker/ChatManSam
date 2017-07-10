@@ -11,6 +11,7 @@ import utils.Logger.Log;
 public class ChatManSam {
 	public static void main(String[] args) {
 		if(args.length != 0 && args[0].equals("-s")) {
+			boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
 			StartServer();
 		} else {
 			StartClient();
@@ -41,6 +42,12 @@ public class ChatManSam {
 			public void run() {
 				for(int i = 0; i < 1; i++) {
 					client.signUpLogIn();
+					Scanner sc = new Scanner(System.in);
+					String inputLine;
+					while(sc.hasNextLine()) {
+						inputLine = sc.nextLine();
+						Log.debug(inputLine);
+					}
 				}
 				
 			}

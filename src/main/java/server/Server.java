@@ -10,7 +10,7 @@ import messaging.Message;
 import socket.SocketManager;
 import utils.Logger.Log;
 import messaging.Message.Type;
-import client.Client.AccountObject;
+
 
 public class Server implements Runnable{
 	private int port;
@@ -89,15 +89,60 @@ public class Server implements Runnable{
 			// Here is where we can redirect messages to other client.
 			Log.debug(message.messageToString());
 
-			if(message.getType() == Type.EchoName) {
-				// receive the object from the message.
+			if(message.getType() == Type.Login) {
+				Log.debug("Account Name: " + message.getMessage());
+				Log.debug("Account Pass: " + message.getMessage2());
 				
-				AccountObject accObject = message.getAccObject();
-				Log.debug("Account Name: " + accObject.accName);
-				Log.debug("Account Pass: " + accObject.accPass);
+				// check server if name exists, check password.
+				// if its username/password correct, set clientconnection username.
+				// then send a successful user log in
+				String checkPW = DAO.getPassWord(message.getMessage());
+				String sentPW = message.getMessage2();
+
+				if(checkPW == null) {
+					Log.debug("checkPW failed!");
+					sendMessage(new Message(Type.Login, "Failed"));
+				}
+				if(checkPW.equals(sentPW)) {
+					Log.debug("checkPW succeeded!");
+					ClientConnection con = getClientConn(message.getMessage());
+					Log.debug(con.toString());
+					if(con == null) {
+						this.setUserName(message.getMessage());
+						putClientConn(this);
+						Log.debug(this.getUserName());
+						sendMessage(new Message(Type.Login, "Success"));
+					} 
+					else {
+						sendMessage(new Message(Type.Login, "Failed"));
+					}
+				}
+				else{
+					sendMessage(new Message(Type.Login, "Failed"));
+				}
+				//
+				
+				
+				/*
+				if(checkPW == accObject.accPass) {
+					ClientConnection con = getClientConn(message.getMessage());
+					if(con == null) {
+						this.setUserName(accObject.accName);
+						putClientConn(this);
+						Log.debug(this.getUserName());
+						sendMessage(new Message(Type.Login, "Success"));
+					} else {
+						sendMessage(new Message(Type.Login, "Failed"));
+					}
+				} else {
+					sendMessage(new Message(Type.Login, "Failed"));
+				}*/
+				
+				
 				
 				
 			}
+			/*
 			if(message.getType() == Type.Login)	{
 				//splitMsg[0] is username, splitMsg[1] is password
 				String[] splitMsg = message.getMessage().toString().split(" ");
@@ -120,7 +165,7 @@ public class Server implements Runnable{
 					sendMessage(new Message(Type.CreateAccount, "Failed"));
 				}
 			}
-
+			*/
 
 
 

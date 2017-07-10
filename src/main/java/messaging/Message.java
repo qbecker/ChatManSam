@@ -2,7 +2,6 @@ package messaging;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import client.Client.AccountObject;
 
 import utils.Logger.Log;
 
@@ -10,8 +9,8 @@ import utils.Logger.Log;
 public class Message implements Serializable{
 	Type type;
 	String message;
+	String message2;
 	String[] recipients;
-	AccountObject accObject;
 
 
 	public Message(Type type, String message) {
@@ -24,9 +23,10 @@ public class Message implements Serializable{
 		this.recipients = recipients;
 	}
 	
-	public Message(Type type, AccountObject object) {
+	public Message(Type type, String message, String message2) {
 		this.type = type;
-		this.accObject = object;
+		this.message = message;
+		this.message2 = message2;
 		
 	}
 
@@ -46,6 +46,10 @@ public class Message implements Serializable{
 	public String getMessage() {
 		return message;
 	}
+	
+	public String getMessage2() {
+		return message2;
+	}
 
 
 	public void setMessage(String message) {
@@ -62,9 +66,12 @@ public class Message implements Serializable{
 
 	public String messageToString() {
 		StringBuilder sb = new StringBuilder();
+		
 		try{
 			sb.append("Type: " + this.getType().toString() + "\n");
-			sb.append("Message: " +  this.getMessage());
+			if(this.getType().toString().equals("Login")) {
+				sb.append("Message: " + this.getMessage() + ", " + this.getMessage2());
+			}
 			if(this.getType().toString().equals("ChatMessage")) {
 				sb.append("Recipients: " + Arrays.toString(this.recipients) + "\n");
 			}
@@ -73,13 +80,9 @@ public class Message implements Serializable{
 		}
 		return sb.toString();
 	}
-	
-	public AccountObject getAccObject() {
-		return this.accObject;
-	}
 
 	public enum Type {
-		ChatMessage, Login, CreateAccount, EchoName
+		ChatMessage, Login, CreateAccount
 	}
 
 }

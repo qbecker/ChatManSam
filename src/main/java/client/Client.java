@@ -34,21 +34,10 @@ public class Client extends SocketManager {
 	public Client(Socket socket) {
 		super(socket);
 		this.loggedIn = false;
-		// Get username from server, buuuut having issues with this.
-		// Not sure how to set the connectedClient username on the server.
-		// I tried returning a string from signUpLogIn()
-		// but I ended up with several back and forth sendMessages.
-		// another option would be to have a name generated when the client starts.
-		// We would need to
-
+		
 	}
 	
-	public void checkName(AccountObject accObject) {
-		sendMessage(new Message(Type.EchoName, accObject));
-	}
-
-	public void login() {
-		sendMessage(new Message(Type.Login, userName));
+	public void createAccount() {
 		
 	}
 
@@ -60,6 +49,7 @@ public class Client extends SocketManager {
 		
 		if(message.getType() == Type.Login) {
 			if(message.getMessage().equals("Success")) {
+				Log.debug("The log in was successful " + userName);
 				this.loggedIn = true;
 			} if(message.getMessage().equals("Failed")) {
 				Log.debug("Username or password incorrect.");
@@ -87,36 +77,10 @@ public class Client extends SocketManager {
 	}
 
 	public void signUpLogIn() {
-		//Log.debug("Logging in with User: Shelby | Pass: Largemelons1");
-		//sendMessage(new Message(Type.CreateAccount, "Shelby Largemelons1"));
-		AccountObject account = new AccountObject("Shelby", "Largemelons1");
-		Log.debug("Account Name: " + account.accName);
-		Log.debug("Account Pass: " + account.accPass);
-		
-		// Here is the where the account object is sent.
-		sendMessage(new Message(Type.EchoName, account));
-		
+		Log.debug("Logging in with User: Shelby | Pass: Largemelons1");
+		sendMessage(new Message(Type.Login, "Shelby", "Largemelons1"));
+
 	}
 	
-	public class AccountObject {
-		// This is the log in object that stores the temp username/password for log in.
-		// Like the username/password field before logging into an application.
-		public String accName;
-		public String accPass;
-		
-		// Here is the contstructor: 
-		public AccountObject(String accName, String accPass) {
-			this.accName = accName;
-			this.accPass = accPass;
-		}
-		/*
-		public String getAccName() {
-			return this.accName;
-		}
-		
-		public String getAccPass() {
-			return this.accPass;
-		}
-		*/
-	}
+	
 }
