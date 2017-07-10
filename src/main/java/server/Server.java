@@ -105,17 +105,19 @@ public class Server implements Runnable{
 				}
 				if(checkPW.equals(sentPW)) {
 					Log.debug("checkPW succeeded!");
-					ClientConnection con = getClientConn(message.getMessage());
-					Log.debug(con.toString());
+					this.setUserName(message.getMessage());
+					ClientConnection con = getClientConn(this.userName);
 					if(con == null) {
-						this.setUserName(message.getMessage());
 						putClientConn(this);
 						Log.debug(this.getUserName());
 						sendMessage(new Message(Type.Login, "Success"));
-					} 
-					else {
+					}else {
 						sendMessage(new Message(Type.Login, "Failed"));
 					}
+					
+				
+					
+				
 				}
 				else{
 					sendMessage(new Message(Type.Login, "Failed"));
