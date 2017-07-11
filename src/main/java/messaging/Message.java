@@ -73,6 +73,9 @@ public class Message implements Serializable{
 			if(this.getType().toString().equals("ChatMessage")) {
 				sb.append("Recipients: " + Arrays.toString(this.recipients) + "\n");
 			}
+			if(this.getType().toString().equals("CreateAccount")) {
+				sb.append("Message: " + this.getMessage());
+			}
 		}catch(Exception e) {
 			Log.debug("Something went wrong in messaging tostring");
 		}

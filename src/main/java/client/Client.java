@@ -37,14 +37,13 @@ public class Client extends SocketManager {
 	}
 
 	public void clientLoop() {
-		signUpLogIn();
 		Scanner sc = new Scanner(System.in);
-		Log.debug("Enter something: ");
 		String inputLine;
+		signUpLogIn();
 		while(sc.hasNextLine()) {
+			Log.debug("Enter something: ");
 			inputLine = sc.nextLine();
 			Log.debug(this.userName + ": " + inputLine);
-			Log.debug("Enter something: ");
 		}
 	}
 
@@ -61,6 +60,7 @@ public class Client extends SocketManager {
 				this.userName = message.getMessage2();
 			} else if(message.getMessage().equals("Failed")) {
 				Log.debug("Username or password incorrect.");
+				logInRequest();
 			} else {
 				Log.debug("Login received neither success nor failed.");
 			}
@@ -69,8 +69,10 @@ public class Client extends SocketManager {
 		if(message.getType() == Type.CreateAccount) {
 			if(message.getMessage().equals("Success")) {
 				Log.debug("Account Creation Sucessful");
-			}	if(message.getMessage().equals("Failed")) {
-				Log.debug("Account Creation Failed");
+				logInRequest();
+			}	else if(message.getMessage().equals("Failed")) {
+				Log.debug("Account Creation Failed. Name may have been taken.");
+				clientLoop();
 			}	else {
 				Log.debug("Account creation received neither success nor failed.");
 			}
@@ -114,10 +116,44 @@ public class Client extends SocketManager {
 	public void logInRequest() {
 		//Log.debug("Logging in with User: Shelby | Pass: Largemelons1");
 		//sendMessage(new Message(Type.Login, "Shelby", "Largemelons1"));
+		Scanner sc = new Scanner(System.in);
+		String user;
+		String pass;
+
+		Log.debug("Enter your username: ");
+		while(sc.hasNextLine()) {
+			user = sc.nextLine();
+			Log.debug("Enter your password: ");
+			pass = sc.nextLine();
+			sendMessage(new Message(Type.Login, user, pass));
+			break;
+		}
 	}
 
 	public void createAccountRequest() {
+		Scanner sc = new Scanner(System.in);
+		String user;
+		String pass;
+		String cpass;
 
+		Log.debug("Enter your username: ");
+		while(sc.hasNextLine()) {
+			user = sc.nextLine();
+			boolean confirmPW = false;
+			while(!confirmPW) {
+				Log.debug("Enter your password: ");
+				pass = sc.nextLine();
+				Log.debug("Confirm your password: ");
+				cpass = sc.nextLine();
+				if(pass.toString().equals(cpass.toString())) {
+					 confirmPW = true;
+					 sendMessage(new Message(Type.CreateAccount, user, pass));
+				} else {
+					Log.debug("Passwords did not match. Try again.");
+				}
+			}
+			break;
+		}
 	}
 
 	String properCase (String inputVal) {

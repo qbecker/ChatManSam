@@ -88,15 +88,12 @@ public class Server implements Runnable{
 			// all incoming messages from connected clients come through here
 			// Here is where we can redirect messages to other client.
 			Log.debug(message.messageToString());
-
 			if(message.getType() == Type.Login) {
 				//message.getMessage() = username.
 				//message.getMessage2() = password.
-
 				// check server if name exists, check password.
 				String checkPW = DAO.getPassWord(message.getMessage());
 				String sentPW = message.getMessage2();
-
 				if(checkPW == null) {
 					Log.debug("checkPW failed!");
 					sendMessage(new Message(Type.Login, "Failed", "Password check failed."));
@@ -108,7 +105,6 @@ public class Server implements Runnable{
 					ClientConnection con = getClientConn(this.userName);
 					if(con == null) {
 						putClientConn(this);
-						//Log.debug(this.getUserName());
 						sendMessage(new Message(Type.Login, "Success", this.userName));
 					}else {
 						sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
@@ -117,28 +113,34 @@ public class Server implements Runnable{
 				else{
 					sendMessage(new Message(Type.Login, "Failed"));
 				}
-				//
+
+			} else if(message.getType() == Type.CreateAccount) {
+				String reqUser = message.getMessage();
+				String reqPass = message.getMessage2();
+				boolean success = DAO.insertUser(reqUser, reqPass, "Online");
+				if(success) {
+					sendMessage(new Message(Type.CreateAccount, "Success"));
+				} else {
+					sendMessage(new Message(Type.CreateAccount, "Failed"));
+				}
+			}
 
 
-				/*
-				if(checkPW == accObject.accPass) {
-					ClientConnection con = getClientConn(message.getMessage());
-					if(con == null) {
-						this.setUserName(accObject.accName);
-						putClientConn(this);
-						Log.debug(this.getUserName());
-						sendMessage(new Message(Type.Login, "Success"));
-					} else {
-						sendMessage(new Message(Type.Login, "Failed"));
-					}
+			/*
+			if(checkPW == accObject.accPass) {
+				ClientConnection con = getClientConn(message.getMessage());
+				if(con == null) {
+					this.setUserName(accObject.accName);
+					putClientConn(this);
+					Log.debug(this.getUserName());
+					sendMessage(new Message(Type.Login, "Success"));
 				} else {
 					sendMessage(new Message(Type.Login, "Failed"));
-				}*/
+				}
+			} else {
+				sendMessage(new Message(Type.Login, "Failed"));
+			}*/
 
-
-
-
-			}
 			/*
 			if(message.getType() == Type.Login)	{
 				//splitMsg[0] is username, splitMsg[1] is password
