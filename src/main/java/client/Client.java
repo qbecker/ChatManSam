@@ -1,13 +1,12 @@
 package client;
 
 import java.net.Socket;
-import socket.SocketManager;
-
 import java.util.Scanner;
+
 import messaging.Message;
 import messaging.Message.Type;
-
-import utils.Logger.*;
+import socket.SocketManager;
+import utils.Logger.Log;
 
 
 public class Client extends SocketManager {
@@ -42,13 +41,24 @@ public class Client extends SocketManager {
 		Log.debug("Press enter to begin.");
 		while(sc.hasNextLine()) {
 			if(this.loggedIn) {
-				Log.debug("Enter something: ");
-				inputLine = sc.nextLine();
-				Log.debug(this.userName + ": " + inputLine);
+			  Log.debug("Enter something: ");
+			  inputLine = sc.nextLine();
+			  Log.debug(this.userName + ": " + inputLine);
+			  //input would be command$ message
+			  String[] inputArr = inputLine.split("$");
+		    	  switch(inputArr[0]) {
+		    	  case "g":
+		    		  if(inputArr[1] != null && inputArr[2] != null) {
+		    			  sendMessage(new Message(Type.ChatRoomMessage, inputArr[2],
+		    					  new String[] {inputArr[1]}, this.userName));
+		    		  }
+		    		  break;
+		    	  }
 			} else if (!this.loggedIn) {
 				signUpLogIn();
 			}
 		}
+		sc.close();
 	}
 
 	//over writen method from socketManager for behavior on incoming messages

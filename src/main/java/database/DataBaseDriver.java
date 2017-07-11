@@ -19,9 +19,9 @@ public class DataBaseDriver {
 			switch(type) {
 				case Test:
 					if(role == DBRole.Client) {
-						dbURL += "./build/serverDB.db";
-					}else {
 						dbURL += "./build/clientDB.db";
+					}else {
+						dbURL += "./build/serverDB.db";
 					}
 					break;
 				case Prod:

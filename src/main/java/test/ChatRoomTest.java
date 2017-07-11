@@ -23,8 +23,6 @@ public class ChatRoomTest {
 		client.userName = testUserName1;
 		Client client2 = Client.clientInit("localhost", 8080);
 		client2.userName = testUserName2;
-		client.login();
-		client2.login();
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

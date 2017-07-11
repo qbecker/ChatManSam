@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DAO{
 
-	public static Connection conn = database.DataBaseDriver.ConnectAndCreateDb(DBType.Test, DBRole.Server);
+	public static Connection conn = database.DataBaseDriver.ConnectAndCreateDb(DBType.Prod, DBRole.Server);
 
 	public static boolean insert(String query, List params ) {
 		boolean ret = true;
