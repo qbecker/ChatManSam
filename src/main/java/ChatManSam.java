@@ -35,17 +35,55 @@ public class ChatManSam {
 	}
 
 	public static void StartClient() {
-		Log.debug(" Starting in client mode... ");
+		System.out.println(" Starting in client mode... ");
 		Client client = Client.clientInit("localhost", 8080);
-		Thread t = new Thread() {
-			public void run() {
-				for(int i = 0; i < 3; i++) {
-					client.SignUpLogIn();
+		Scanner sc = new Scanner(System.in);
+		String nameStr = sc.nextLine();
+		System.out.println("your name: " + nameStr);
+	    
+	    client.userName = nameStr;
+
+	    //init client
+	    //send a test message
+	    client.login();
+	    // Message mes = new Message("ChatMessage", "poop", new String[] {"test"});
+	    // client.sendMessage(mes);
+
+	    /*
+	    	EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						ChatWindow frame = new ChatWindow();
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				
-			}
-		};
-		t.start();
+			});
+		*/
+		client.sendMessage(new Message(Type.CreateChatRoom, "TestChatRoom", new String[] {"bob","qb" }));
+
+
+	    	String inputLine;
+	    	while(sc.hasNextLine()) {
+	    	  inputLine = sc.nextLine();
+	    	  Log.debug(inputLine);
+	    	  String[] inputArr = inputLine.split(" ");
+	    	  switch(inputArr[0]) {
+	    	  case "-g":
+	    		  if(inputArr[1] != null && inputArr[2] != null) {
+	    			  client.sendMessage(new Message(Type.ChatRoomMessage, inputArr[2],
+	    					  new String[] {inputArr[1]}, client.userName));
+	    		  }
+	    		  break;
+	    	  }
+	    	  
+	    	  System.out.println("ReadyForCommand");
+	    	}
+	    	sc.close();
+
+		
+		
 	}
 
 
