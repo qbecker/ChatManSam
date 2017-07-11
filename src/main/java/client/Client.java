@@ -62,8 +62,10 @@ public class Client extends SocketManager {
 				// The log in was successful.
 				this.loggedIn = true;
 				this.userName = message.getMessage2();
+				Log.debug("Press enter to continue!");
 			} else if(message.getMessage().equals("Failed")) {
 				Log.debug("Username or password incorrect.");
+				Log.debug("Press enter to continue!");
 			} else {
 				Log.debug("Login received neither success nor failed.");
 			}
@@ -92,7 +94,7 @@ public class Client extends SocketManager {
 		String inputLine;
 
 		Log.debug("Would you like to [L]og in, [C]reate an account, or [Q]uit?");
-		while(sc.hasNextLine()) {
+		while(!this.loggedIn) {
 			inputLine = sc.nextLine();
 
 			if (inputLine.toLowerCase().equals("l")) {
@@ -107,7 +109,7 @@ public class Client extends SocketManager {
 				Log.debug("You wish to quit!");
 				System.exit(0);
 
-			} else {
+			} else if (!this.loggedIn) {
 				Log.debug("Command not recognized. Please try again.");
 				Log.debug("Would you like to [L]og in, [C]reate an account, or [Q]uit?");
 			}
@@ -164,13 +166,13 @@ public class Client extends SocketManager {
 		//String inputval="ABCb" OR "a123BC_DET" or "aBcd"
 		//String outputval="Abcb" or "A123bc_det" or "Abcd"
 
-    // Empty strings should be returned as-is.
-    if (inputVal.length() == 0) return "";
-    // Strings with only one character uppercased.
-    if (inputVal.length() == 1) return inputVal.toUpperCase();
-    // Otherwise uppercase first letter, lowercase the rest.
-    return inputVal.substring(0,1).toUpperCase()
-        + inputVal.substring(1).toLowerCase();
+		// Empty strings should be returned as-is.
+		if (inputVal.length() == 0) return "";
+		// Strings with only one character uppercased.
+		if (inputVal.length() == 1) return inputVal.toUpperCase();
+		// Otherwise uppercase first letter, lowercase the rest.
+		return inputVal.substring(0,1).toUpperCase()
+				+ inputVal.substring(1).toLowerCase();
 }
 
 
