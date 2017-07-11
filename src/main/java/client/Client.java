@@ -39,11 +39,15 @@ public class Client extends SocketManager {
 	public void clientLoop() {
 		Scanner sc = new Scanner(System.in);
 		String inputLine;
-		signUpLogIn();
+		Log.debug("Press enter to begin.");
 		while(sc.hasNextLine()) {
-			Log.debug("Enter something: ");
-			inputLine = sc.nextLine();
-			Log.debug(this.userName + ": " + inputLine);
+			if(this.loggedIn) {
+				Log.debug("Enter something: ");
+				inputLine = sc.nextLine();
+				Log.debug(this.userName + ": " + inputLine);
+			} else if (!this.loggedIn) {
+				signUpLogIn();
+			}
 		}
 	}
 
@@ -60,7 +64,6 @@ public class Client extends SocketManager {
 				this.userName = message.getMessage2();
 			} else if(message.getMessage().equals("Failed")) {
 				Log.debug("Username or password incorrect.");
-				logInRequest();
 			} else {
 				Log.debug("Login received neither success nor failed.");
 			}
@@ -69,10 +72,8 @@ public class Client extends SocketManager {
 		if(message.getType() == Type.CreateAccount) {
 			if(message.getMessage().equals("Success")) {
 				Log.debug("Account Creation Sucessful");
-				logInRequest();
 			}	else if(message.getMessage().equals("Failed")) {
 				Log.debug("Account Creation Failed. Name may have been taken.");
-				clientLoop();
 			}	else {
 				Log.debug("Account creation received neither success nor failed.");
 			}
