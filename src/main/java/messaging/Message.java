@@ -44,7 +44,7 @@ public class Message implements Serializable{
 	public String getMessage() {
 		return message;
 	}
-	
+
 	public String getMessage2() {
 		return message2;
 	}
@@ -64,7 +64,7 @@ public class Message implements Serializable{
 
 	public String messageToString() {
 		StringBuilder sb = new StringBuilder();
-		
+
 		try{
 			sb.append("Type: " + this.getType().toString() + "\n");
 			if(this.getType().toString().equals("Login")) {

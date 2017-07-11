@@ -5,6 +5,7 @@ import database.DAO;
 import messaging.Message;
 import messaging.Message.Type;
 import server.Server;
+
 import utils.Logger.Log;
 
 
@@ -40,16 +41,7 @@ public class ChatManSam {
 		Client client = Client.clientInit("localhost", 8080);
 		Thread t = new Thread() {
 			public void run() {
-				for(int i = 0; i < 1; i++) {
-					client.signUpLogIn();
-					Scanner sc = new Scanner(System.in);
-					String inputLine;
-					while(sc.hasNextLine()) {
-						inputLine = sc.nextLine();
-						Log.debug(inputLine);
-					}
-				}
-				
+				client.clientLoop();
 			}
 		};
 		t.start();

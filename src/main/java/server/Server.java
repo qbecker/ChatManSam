@@ -90,41 +90,36 @@ public class Server implements Runnable{
 			Log.debug(message.messageToString());
 
 			if(message.getType() == Type.Login) {
-				Log.debug("Account Name: " + message.getMessage());
-				Log.debug("Account Pass: " + message.getMessage2());
-				
+				//message.getMessage() = username.
+				//message.getMessage2() = password.
+
 				// check server if name exists, check password.
-				// if its username/password correct, set clientconnection username.
-				// then send a successful user log in
 				String checkPW = DAO.getPassWord(message.getMessage());
 				String sentPW = message.getMessage2();
 
 				if(checkPW == null) {
 					Log.debug("checkPW failed!");
-					sendMessage(new Message(Type.Login, "Failed"));
+					sendMessage(new Message(Type.Login, "Failed", "Password check failed."));
 				}
+
 				if(checkPW.equals(sentPW)) {
 					Log.debug("checkPW succeeded!");
 					this.setUserName(message.getMessage());
 					ClientConnection con = getClientConn(this.userName);
 					if(con == null) {
 						putClientConn(this);
-						Log.debug(this.getUserName());
-						sendMessage(new Message(Type.Login, "Success", "You have been logged in."));
+						//Log.debug(this.getUserName());
+						sendMessage(new Message(Type.Login, "Success", this.userName));
 					}else {
 						sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
 					}
-					
-				
-					
-				
 				}
 				else{
 					sendMessage(new Message(Type.Login, "Failed"));
 				}
 				//
-				
-				
+
+
 				/*
 				if(checkPW == accObject.accPass) {
 					ClientConnection con = getClientConn(message.getMessage());
@@ -139,10 +134,10 @@ public class Server implements Runnable{
 				} else {
 					sendMessage(new Message(Type.Login, "Failed"));
 				}*/
-				
-				
-				
-				
+
+
+
+
 			}
 			/*
 			if(message.getType() == Type.Login)	{
