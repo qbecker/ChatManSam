@@ -13,6 +13,7 @@ import socket.SocketManager;
 import utils.Logger.Log;
 import messaging.Message.Type;
 
+
 public class Server implements Runnable{
 	private int port;
 	private ServerSocket servSoc;
@@ -126,32 +127,44 @@ public class Server implements Runnable{
 			// Here is where we can redirect messages to other client.
 			
 			Log.debug(message.messageToString());
-
 			if(message.getType() == Type.Login) {
-				//splitMsg[0] is username, splitMsg[1] is password
-				/*String[] splitMsg = message.getMessage().toString().split(" ");
-				String checkPW = DAO.getPassWord(splitMsg[0]);
-				if(checkPW != splitMsg[1])
-				{
-					Log.debug("Log in successful.");
-					sendMessage(new Message(Type.Login, "Success"));
-				} else {
+				//message.getMessage() = username.
+				//message.getMessage2() = password.
+				// check server if name exists, check password.
+				String checkPW = DAO.getPassWord(message.getMessage());
+				String sentPW = message.getMessage2();
+				if(checkPW == null) {
+					Log.debug("checkPW failed!");
+					sendMessage(new Message(Type.Login, "Failed", "Password check failed."));
+				}
+
+				if(checkPW.equals(sentPW)) {
+					Log.debug("checkPW succeeded!");
+					this.setUserName(message.getMessage());
+					ClientConnection con = getClientConn(this.userName);
+					if(con == null) {
+						putClientConn(this);
+						sendMessage(new Message(Type.Login, "Success", this.userName));
+					}else {
+						sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
+					}
+				}
+				else{
 					sendMessage(new Message(Type.Login, "Failed"));
-				}*/
-				putClientConn(this);
-				sendMessage(new Message(Type.Login, "Success"));
-			}
-			if(message.getType() == Type.CreateAccount) {
-				String[] splitMsg = message.getMessage().toString().split(" ");
-				boolean created = DAO.insertUser(splitMsg[0], splitMsg[1], "New User");
-				if(created) {
-					Log.debug("Account Creation successful.");
+				}
+
+			} else if(message.getType() == Type.CreateAccount) {
+				String reqUser = message.getMessage();
+				String reqPass = message.getMessage2();
+				boolean success = DAO.insertUser(reqUser, reqPass, "Online");
+				if(success) {
 					sendMessage(new Message(Type.CreateAccount, "Success"));
-				}else {
-					Log.debug("Account Creation Failed.");
+				} else {
 					sendMessage(new Message(Type.CreateAccount, "Failed"));
 				}
 			}
+
+
 			if(message.getType() == Type.CreateChatRoom) {
 				Log.debug("Entering create chatx");
 				ChatRoom chat = new ChatRoom(message.getMessage(), message.getRecipients());
@@ -164,17 +177,7 @@ public class Server implements Runnable{
 					sendMessage(new Message(Type.ChatRoomMessage, "Failed"));
 				}
 			}
-			if(message.getType()== Type.Login) {
-				ClientConnection con = getClientConn(message.getMessage());
-				if(con == null) {
-					this.setUserName(message.getMessage());
-					putClientConn(this);
-					Log.debug(this.getUserName());
-					sendMessage(new Message(Type.Login, "Success"));
-				} else {
-					sendMessage(new Message(Type.Login, "Failed"));
-				}
-			}
+			
 			if(message.getType() == Type.ChatMessage) {
 				String[] recips = message.getRecipients();
 				for(int i = 0; i < recips.length; i++) {

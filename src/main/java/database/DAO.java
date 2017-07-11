@@ -47,7 +47,7 @@ public class DAO{
 				}
 				result = get.executeQuery();
 			}catch(Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		return result;
