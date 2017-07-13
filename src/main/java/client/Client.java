@@ -74,9 +74,9 @@ public class Client extends SocketManager {
 		if(message.getType() == Type.CreateAccount) {
 			if(message.getMessage().equals("Success")) {
 				Log.debug("Account Creation Sucessful");
-			}	else if(message.getMessage().equals("Failed")) {
+			} else if(message.getMessage().equals("Failed")) {
 				Log.debug("Account Creation Failed. Name may have been taken.");
-			}	else {
+			} else {
 				Log.debug("Account creation received neither success nor failed.");
 			}
 		}
