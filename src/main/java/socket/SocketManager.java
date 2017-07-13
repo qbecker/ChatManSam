@@ -28,7 +28,6 @@ public abstract class SocketManager implements Runnable {
 			//todo fail gracefully
 			Log.debug("socket creation failed");
 		}
-
 	}
 
 	//over ridden from Runnable(Our threads)
@@ -47,7 +46,6 @@ public abstract class SocketManager implements Runnable {
 			closeConnection();
 			Log.debug("socket closed");
 		}
-
 	}
 
 
@@ -58,14 +56,12 @@ public abstract class SocketManager implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void closeConnection() {
 		try {inputRead.close();}catch(Exception e) {e.printStackTrace();}
 		try {outputWriter.close();}catch(Exception e) {e.printStackTrace();}
 		try {socket.close();}catch(Exception e) {e.printStackTrace();}
-
 	}
 
 

@@ -36,24 +36,28 @@ public class Client extends SocketManager {
 	}
 
 	public void clientLoop() {
+		// Input scanner is started.
 		Scanner sc = new Scanner(System.in);
 		String inputLine;
+		// Scanner stops loop from starting. Enter starts nexLine.
 		Log.debug("Press enter to begin.");
 		while(sc.hasNextLine()) {
 			if(this.loggedIn) {
-			  Log.debug("Enter something: ");
-			  inputLine = sc.nextLine();
-			  Log.debug(this.userName + ": " + inputLine);
-			  //input would be command$ message
-			  String[] inputArr = inputLine.split("$");
-		    	  switch(inputArr[0]) {
-		    	  case "g":
-		    		  if(inputArr[1] != null && inputArr[2] != null) {
-		    			  sendMessage(new Message(Type.ChatRoomMessage, inputArr[2],
-		    					  new String[] {inputArr[1]}, this.userName));
-		    		  }
-		    		  break;
-		    	  }
+				Log.debug("Enter something: ");
+				inputLine = sc.nextLine();
+				Log.debug(this.userName + ": " + inputLine);
+				//input would be command$ message (should it be com$ group/name$ message?)
+				String[] inputArr = inputLine.split("$");
+				
+				switch(inputArr[0]) {
+				case "g":
+					if(inputArr[1] != null && inputArr[2] != null) {
+						sendMessage(new Message(Type.ChatRoomMessage, inputArr[2],
+							new String[] {inputArr[1]}, this.userName));
+					}
+					break;
+				}
+				
 			} else if (!this.loggedIn) {
 				signUpLogIn();
 			}
@@ -66,13 +70,13 @@ public class Client extends SocketManager {
 	public void readMessage(Message message) {
 		Log.debug("Received Message: ");
 		Log.debug("New Message on client: " + this.userName);
+		
 		if(message.getType() == Type.ChatRoomMessage) {
 			Log.debug("Getting chat room message");
 			System.out.print(message.getSender() + ": ");
 			System.out.println(message.getMessage());
 		}
 		Log.debug(message.messageToString());
-
 
 		if(message.getType() == Type.Login) {
 			if(message.getMessage().equals("Success")) {
@@ -97,14 +101,12 @@ public class Client extends SocketManager {
 				Log.debug("Account creation received neither success nor failed.");
 			}
 		}
-		
 	}
 
 	@Override
 	public void disconnect() {
 
 	}
-
 
 	public void signUpLogIn() {
 
@@ -132,6 +134,7 @@ public class Client extends SocketManager {
 				Log.debug("Would you like to [L]og in, [C]reate an account, or [Q]uit?");
 			}
 		}
+		sc.close();
 	}
 
 	public void logInRequest() {
@@ -178,7 +181,7 @@ public class Client extends SocketManager {
 	}
 
 	String properCase (String inputVal) {
-		// Shamelessly stolen from the user paxdiablo on SE.
+		// Shamelessly stolen from the user paxdiablo on SO.
 		// https://stackoverflow.com/questions/2375649/converting-to-upper-and-lower-case-in-java
 
 		//String inputval="ABCb" OR "a123BC_DET" or "aBcd"
@@ -191,7 +194,7 @@ public class Client extends SocketManager {
 		// Otherwise uppercase first letter, lowercase the rest.
 		return inputVal.substring(0,1).toUpperCase()
 				+ inputVal.substring(1).toLowerCase();
-}
+	}
 
 
 }

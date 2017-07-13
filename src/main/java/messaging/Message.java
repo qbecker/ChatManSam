@@ -40,7 +40,6 @@ public class Message implements Serializable{
 		return type;
 	}
 
-
 	public void setType(Type type) {
 		this.type = type;
 	}
@@ -53,7 +52,6 @@ public class Message implements Serializable{
 		return sender;
 	}
 
-
 	public String getMessage() {
 		return message;
 	}
@@ -61,8 +59,7 @@ public class Message implements Serializable{
 	public String getMessage2() {
 		return message2;
 	}
-
-
+	
 	public void setMessage(String message) {
 		this.message = message;
 	}
@@ -75,6 +72,7 @@ public class Message implements Serializable{
 		this.recipients = recipients;
 	}
 
+	
 	public String messageToString() {
 		StringBuilder sb = new StringBuilder();
 
