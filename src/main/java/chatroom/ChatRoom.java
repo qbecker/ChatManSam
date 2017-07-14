@@ -59,5 +59,4 @@ public class ChatRoom {
 		}
 		return ret;
 	}
-	
 }
