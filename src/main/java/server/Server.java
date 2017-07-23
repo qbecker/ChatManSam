@@ -18,11 +18,9 @@ public class Server implements Runnable{
 	private int port;
 	private ServerSocket servSoc;
 
-	private  HashMap<String, ClientConnection> connectedClients;
 	private 	 HashMap<String, ChatRoom> currentChatRooms;
 
 	public Server(int port) {
-		this.connectedClients = new HashMap<String, ClientConnection>();
 		this.currentChatRooms = new HashMap<String, ChatRoom>();
 		this.port = port;
 		Thread thread = new Thread(this);
@@ -30,17 +28,7 @@ public class Server implements Runnable{
 		//boolean test = DAO.insertUser("Shelby", "Largemelons1", "Online");
 	}
 
-	public boolean putClientConn(ClientConnection conn) {
-		boolean ret = true;
-		synchronized(connectedClients) {
-			try {
-				connectedClients.put(conn.getUserName(), conn);
-			}catch(Exception e) {
-				ret = false;
-			}
-		}
-		return ret;
-	}
+
 	
 	public boolean removeChatRoom(String name) {
 		boolean ret = true;
@@ -76,17 +64,7 @@ public class Server implements Runnable{
 		return ret;
 	}
 
-	public ClientConnection getClientConn(String userName) {
-		ClientConnection ret = null;
-		synchronized(connectedClients) {
-			try {
-				ret = connectedClients.get(userName);
-			}catch(Exception e) {
-				Log.debug("Something went wrong in getClientConn");
-			}
-		}
-		return ret;
-	}
+	
 
 	@Override
 	public void run() {
@@ -141,9 +119,9 @@ public class Server implements Runnable{
 				if(checkPW.equals(sentPW)) {
 					Log.debug("checkPW succeeded!");
 					this.setUserName(message.getMessage());
-					ClientConnection con = getClientConn(this.userName);
+					ClientConnection con = ClientConnectionCollection.getInstance().getClientConn(this.userName);
 					if(con == null) {
-						putClientConn(this);
+						ClientConnectionCollection.getInstance().putClientConn(this);
 						sendMessage(new Message(Type.Login, "Success", this.userName));
 					}else {
 						sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
@@ -182,7 +160,7 @@ public class Server implements Runnable{
 				String[] recips = message.getRecipients();
 				for(int i = 0; i < recips.length; i++) {
 					ClientConnection con = null;
-					con = getClientConn(recips[i]);
+					con = ClientConnectionCollection.getInstance().getClientConn(recips[i]);
 					if(con != null) {
 						con.sendMessage(new Message(Type.ChatMessage, message.getMessage(), new String[] {this.userName}));
 						Log.debug("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
@@ -195,7 +173,7 @@ public class Server implements Runnable{
 					String[] members = chat.getAllMembers();
 					for(int i = 0; i < members.length; i++) {
 						ClientConnection con = null;
-						con = getClientConn(members[i]);
+						con = ClientConnectionCollection.getInstance().getClientConn(members[i]);
 						if(con != null) {
 							con.sendMessage(new Message(Type.ChatRoomMessage, message.getMessage(), new String[] {message.getRecipients()[0]}, this.getUserName()));
 							Log.debug("Group Message From: " + this.userName +" to: "+ members[i] + " Containing: " + message.getMessage());
