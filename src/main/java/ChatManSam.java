@@ -1,6 +1,9 @@
+import java.awt.EventQueue;
 import java.util.Scanner;
 
 import client.Client;
+import client.GUI.ChatWindow;
+import client.GUI.LoginWindow;
 import database.DAO;
 import messaging.Message;
 import messaging.Message.Type;
@@ -38,21 +41,36 @@ public class ChatManSam {
 
 	public static void StartClient() {
 		System.out.println(" Starting in client mode... ");
-		Client client = Client.clientInit("localhost", 8080);
 		Thread t = new Thread() {
 			public void run() {
-				client.clientLoop();
+				Client.instance.clientLoop();
 			}
 		};
 		t.start();
+		/*
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ChatWindow frame = new ChatWindow();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					LoginWindow window = new LoginWindow();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		*/
 	}
-
-
-
-
-
-
-
 
 
 

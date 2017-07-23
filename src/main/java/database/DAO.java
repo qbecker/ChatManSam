@@ -79,6 +79,7 @@ public class DAO{
 		try {
 			ret = results.getString("password");
 		} catch (SQLException e) {
+			Log.debug(e.toString());
 			e.printStackTrace();
 		}
 		return ret;

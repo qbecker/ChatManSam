@@ -1,8 +1,11 @@
 package client;
 
+import java.awt.EventQueue;
 import java.net.Socket;
 import java.util.Scanner;
 
+import client.GUI.ChatWindow;
+import client.GUI.LoginWindow;
 import messaging.Message;
 import messaging.Message.Type;
 import socket.SocketManager;
@@ -10,10 +13,28 @@ import utils.Logger.Log;
 
 
 public class Client extends SocketManager {
-	//private SocketManager socMan;
+	
 	public String userName;
 	public boolean loggedIn;
 
+	public static Client instance = clientInit("localhost", 8080);
+	private static LoginWindow loginWindow;
+	private ChatWindow chatWindow;
+	
+	
+	public void startChatWindow() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					 chatWindow = new ChatWindow();
+					 chatWindow.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	//create a new client
 	public static Client clientInit(String address, int port) {
 
@@ -36,6 +57,15 @@ public class Client extends SocketManager {
 	}
 
 	public void clientLoop() {
+		
+		
+		//create login window
+		
+		loginWindow = new LoginWindow();
+		loginWindow.frame.setVisible(true);
+		
+		
+		/*
 		Scanner sc = new Scanner(System.in);
 		String inputLine;
 		Log.debug("Press enter to begin.");
@@ -59,6 +89,8 @@ public class Client extends SocketManager {
 			}
 		}
 		sc.close();
+		*/
+		
 	}
 
 	//over writen method from socketManager for behavior on incoming messages
@@ -66,10 +98,12 @@ public class Client extends SocketManager {
 	public void readMessage(Message message) {
 		Log.debug("Received Message: ");
 		Log.debug("New Message on client: " + this.userName);
-		if(message.getType() == Type.ChatRoomMessage) {
+		if(message.getType() == Type.ChatMessage) {
 			Log.debug("Getting chat room message");
 			System.out.print(message.getSender() + ": ");
 			System.out.println(message.getMessage());
+			this.chatWindow.insertChatMessage(message);
+			
 		}
 		Log.debug(message.messageToString());
 
@@ -80,9 +114,11 @@ public class Client extends SocketManager {
 				this.loggedIn = true;
 				this.userName = message.getMessage2();
 				Log.debug("Press enter to continue!");
+				loginWindow.frame.dispose();
+				startChatWindow();
 			} else if(message.getMessage().equals("Failed")) {
 				Log.debug("Username or password incorrect.");
-				Log.debug("Press enter to continue!");
+				loginWindow.setWarningLable("Username or pass incorrect");
 			} else {
 				Log.debug("Login received neither success nor failed.");
 			}
@@ -117,7 +153,7 @@ public class Client extends SocketManager {
 
 			if (inputLine.toLowerCase().equals("l")) {
 				Log.debug("You wish to log in!");
-				logInRequest();
+				//logInRequest();
 
 			} else if (inputLine.toLowerCase().equals("c")) {
 				Log.debug("You wish to create an account!");
@@ -134,21 +170,11 @@ public class Client extends SocketManager {
 		}
 	}
 
-	public void logInRequest() {
+	public void logInRequest(String user, String pass) {
 		//Log.debug("Logging in with User: Shelby | Pass: Largemelons1");
 		//sendMessage(new Message(Type.Login, "Shelby", "Largemelons1"));
-		Scanner sc = new Scanner(System.in);
-		String user;
-		String pass;
 
-		Log.debug("Enter your username: ");
-		while(sc.hasNextLine()) {
-			user = sc.nextLine();
-			Log.debug("Enter your password: ");
-			pass = sc.nextLine();
-			sendMessage(new Message(Type.Login, user, pass));
-			break;
-		}
+		instance.sendMessage(new Message(Type.Login, user, pass));
 	}
 
 	public void createAccountRequest() {

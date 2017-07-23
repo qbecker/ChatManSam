@@ -73,6 +73,7 @@ public class Server implements Runnable{
 			servSoc = new ServerSocket(port);
 			while(true) {
 				Socket soc = servSoc.accept();
+				Log.debug("New socket");
 				ClientConnection client = new ClientConnection(soc);
 
 			}
@@ -109,27 +110,33 @@ public class Server implements Runnable{
 				//message.getMessage() = username.
 				//message.getMessage2() = password.
 				// check server if name exists, check password.
+				Log.debug(message.getMessage());
+				Log.debug(message.getMessage2());
 				String checkPW = DAO.getPassWord(message.getMessage());
 				String sentPW = message.getMessage2();
 				if(checkPW == null) {
 					Log.debug("checkPW failed!");
+					
 					sendMessage(new Message(Type.Login, "Failed", "Password check failed."));
 				}
-
-				if(checkPW.equals(sentPW)) {
-					Log.debug("checkPW succeeded!");
-					this.setUserName(message.getMessage());
-					ClientConnection con = ClientConnectionCollection.getInstance().getClientConn(this.userName);
-					if(con == null) {
-						ClientConnectionCollection.getInstance().putClientConn(this);
-						sendMessage(new Message(Type.Login, "Success", this.userName));
-					}else {
-						sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
+				
+				if(checkPW != null) {
+					if(checkPW.equals(sentPW)) {
+						Log.debug("checkPW succeeded!");
+						this.setUserName(message.getMessage());
+						ClientConnection con = ClientConnectionCollection.getInstance().getClientConn(this.userName);
+						if(con == null) {
+							ClientConnectionCollection.getInstance().putClientConn(this);
+							sendMessage(new Message(Type.Login, "Success", this.userName));
+						}else {
+							sendMessage(new Message(Type.Login, "Failed", "You have NOT been logged in."));
+						}
+					}
+					else{
+						sendMessage(new Message(Type.Login, "Failed"));
 					}
 				}
-				else{
-					sendMessage(new Message(Type.Login, "Failed"));
-				}
+				
 
 			} else if(message.getType() == Type.CreateAccount) {
 				String reqUser = message.getMessage();
@@ -157,6 +164,9 @@ public class Server implements Runnable{
 			}
 			
 			if(message.getType() == Type.ChatMessage) {
+				
+				/*
+				 * temporarily taking out for testing so the message goes to all
 				String[] recips = message.getRecipients();
 				for(int i = 0; i < recips.length; i++) {
 					ClientConnection con = null;
@@ -164,6 +174,17 @@ public class Server implements Runnable{
 					if(con != null) {
 						con.sendMessage(new Message(Type.ChatMessage, message.getMessage(), new String[] {this.userName}));
 						Log.debug("Message From: " + this.userName +" to: "+ recips[i] + " Containing: " + message.getMessage());
+					}
+				}
+				*/
+				String[] members = ClientConnectionCollection.getInstance().getAllClientNames();
+				for(int i = 0; i < members.length; i++) {
+					ClientConnection con = null;
+					con = ClientConnectionCollection.getInstance().getClientConn(members[i]);
+					if(con != null) {
+						Message msg = new Message(Type.ChatMessage, message.getMessage(), new String[] {this.userName});
+						msg.setSender(this.userName);
+						con.sendMessage(msg);
 					}
 				}
 			}

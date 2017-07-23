@@ -41,6 +41,7 @@
         description="compile the source">
     <!-- Compile the java code from ${src} into ${build} -->
     <javac srcdir="${src}"
+    			debug = "true"
              includeantruntime="false"
              destdir="${build}">
          <classpath refid="compile.classpath"/>
