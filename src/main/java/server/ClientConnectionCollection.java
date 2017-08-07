@@ -18,6 +18,7 @@ public class ClientConnectionCollection {
 		
 		return instance;
 	}
+	//why are you not on master
 	
 	private ClientConnectionCollection() {
 		this.connectedClients = new HashMap<String, ClientConnection>();
