@@ -35,9 +35,7 @@ public class ChatWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		
 		DefaultListModel<String> dlm = new DefaultListModel<String>();
-		
 		
 		JButton sendButton = new JButton("Send");
 		
@@ -58,7 +56,7 @@ public class ChatWindow extends JFrame {
 		
 		
 		JList ChatList = new JList(dlm);
-		ChatList.setBounds(6, 6, 74, 219);
+		ChatList.setBounds(6, 6, 62, 219);
 		contentPane.add(ChatList);
 		
 		JList ChatRoomList = new JList();
@@ -88,7 +86,6 @@ public class ChatWindow extends JFrame {
 				
 			}
 		});
-		
 		
 	}
 	
