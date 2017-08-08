@@ -144,7 +144,7 @@ public class Server implements Runnable{
 
 
 			if(message.getType() == Type.CreateChatRoom) {
-				Log.debug("Entering create chatx");
+				Log.debug("Entering create chat");
 				ChatRoom chat = new ChatRoom(message.getMessage(), message.getRecipients());
 				boolean created = putChatRoom(chat);
 				if(created) {
