@@ -3,6 +3,7 @@ package client.GUI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultCaret;
 
 import client.Client;
 import messaging.Message;
@@ -27,8 +28,8 @@ public class ChatWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextArea textArea;
-	public JFrame frame;
 	private JTextArea chatArea;
+	public JFrame frame;
 	
 	
 	
@@ -52,13 +53,15 @@ public class ChatWindow extends JFrame {
 		JList list = new JList();
 		
 		JButton sendButton = new JButton("Send");
+		textArea.setWrapStyleWord(true);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		
 		chatArea = new JTextArea();
-		chatArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		chatArea.setWrapStyleWord(true);
+		scrollPane.setViewportView(chatArea);
+		
+		
+		DefaultCaret caret = (DefaultCaret) chatArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -67,38 +70,30 @@ public class ChatWindow extends JFrame {
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+							.addComponent(textArea)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(sendButton, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(list, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(chatArea, GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 399, GroupLayout.PREFERRED_SIZE)))
 					.addGap(0))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(34)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(34)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(list, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-								.addComponent(chatArea, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-							.addPreferredGap(ComponentPlacement.UNRELATED))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(89)))
+						.addComponent(list, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
 						.addComponent(sendButton, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
 					.addGap(4))
 		);
-		frame.getContentPane().setLayout(groupLayout);
 		
+		frame.getContentPane().setLayout(groupLayout);
 		
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
