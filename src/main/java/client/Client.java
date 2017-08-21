@@ -16,7 +16,7 @@ public class Client extends SocketManager {
 	
 	public String userName;
 	public boolean loggedIn;
-
+	
 	public static Client instance = clientInit("localhost", 8080);
 	private static LoginWindow loginWindow;
 	private ChatWindow chatWindow;
@@ -27,7 +27,8 @@ public class Client extends SocketManager {
 			public void run() {
 				try {
 					 chatWindow = new ChatWindow();
-					 chatWindow.setVisible(true);
+					 chatWindow.frame.setVisible(true);
+					 System.out.println("Window should be open");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -114,6 +115,7 @@ public class Client extends SocketManager {
 				this.loggedIn = true;
 				this.userName = message.getMessage2();
 				Log.debug("Press enter to continue!");
+				Log.debug("Press enter to continue!");
 				loginWindow.frame.dispose();
 				startChatWindow();
 			} else if(message.getMessage().equals("Failed")) {
@@ -138,10 +140,12 @@ public class Client extends SocketManager {
 
 	@Override
 	public void disconnect() {
-
+		
 	}
 
-
+	public static void ImLoggingOff() {
+		instance.sendMessage(new Message(Type.DisconnectMessage, "Thing", "Thing"));
+	}
 	public void signUpLogIn() {
 
 		Scanner sc = new Scanner(System.in);

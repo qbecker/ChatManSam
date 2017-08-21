@@ -17,6 +17,9 @@ public abstract class SocketManager implements Runnable {
 	private Socket socket;
 	private ObjectInputStream inputRead;
 	private ObjectOutputStream outputWriter;
+	private boolean connected;
+
+	
 
 	public SocketManager(Socket socket) {
 		this.socket = socket;
@@ -36,7 +39,8 @@ public abstract class SocketManager implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while(!socket.isClosed()) {
+			setConnected(true);
+			while(!socket.isClosed() && connected) {
 				Message msg = (Message) inputRead.readObject();
 				readMessage(msg);
 			}
@@ -44,8 +48,9 @@ public abstract class SocketManager implements Runnable {
 			//todo: fail gracefully and clean up resources
 			Log.debug("Disconnected");
 			e.printStackTrace();
+			
+		}finally {
 			closeConnection();
-			Log.debug("socket closed");
 		}
 
 	}
@@ -65,7 +70,16 @@ public abstract class SocketManager implements Runnable {
 		try {inputRead.close();}catch(Exception e) {e.printStackTrace();}
 		try {outputWriter.close();}catch(Exception e) {e.printStackTrace();}
 		try {socket.close();}catch(Exception e) {e.printStackTrace();}
+		Log.debug("socket closed");
 
+	}
+	
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public void setConnected(boolean connected) {
+		this.connected = connected;
 	}
 
 

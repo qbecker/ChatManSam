@@ -107,8 +107,6 @@ public class Server implements Runnable{
 			
 			Log.debug(message.messageToString());
 			if(message.getType() == Type.Login) {
-				//message.getMessage() = username.
-				//message.getMessage2() = password.
 				// check server if name exists, check password.
 				Log.debug(message.getMessage());
 				Log.debug(message.getMessage2());
@@ -151,7 +149,7 @@ public class Server implements Runnable{
 
 
 			if(message.getType() == Type.CreateChatRoom) {
-				Log.debug("Entering create chatx");
+				Log.debug("Entering create chat");
 				ChatRoom chat = new ChatRoom(message.getMessage(), message.getRecipients());
 				boolean created = putChatRoom(chat);
 				if(created) {
@@ -202,10 +200,15 @@ public class Server implements Runnable{
 					}
 				}
 			}
+			if(message.getType() == Type.DisconnectMessage) {
+				disconnect();
+			}
 		}
 
 		@Override
 		public void disconnect() {
+			this.setConnected(false);
+			ClientConnectionCollection.getInstance().removeClientConn(this.userName);
 		}
 	}
 }
